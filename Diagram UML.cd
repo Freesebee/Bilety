@@ -3,7 +3,7 @@
   <Class Name="Bilety.BiletSystem">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAgAAAAAgAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>BiletSystem.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -38,21 +38,21 @@
   <Class Name="Bilety.Lot">
     <Position X="4" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAABAAAAAAAgAIAAAAA=</HashCode>
+      <HashCode>AAAAAAIAIAAAAAABAAAAAAAAAAAAAAAAAAAgBAAAAAA=</HashCode>
       <FileName>Lot.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Klient">
     <Position X="6" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAACAAAAAAAAAAAAACAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAACAAAAAAAAAAABACAAAA=</HashCode>
       <FileName>Klient.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Firma">
     <Position X="7.75" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAA=</HashCode>
       <FileName>Firma.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -61,6 +61,20 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAgAIAAAAAAA=</HashCode>
       <FileName>Lotnisko.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bilety.Bilet">
+    <Position X="9.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Bilet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bilety.Trasa">
+    <Position X="8.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Trasa.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

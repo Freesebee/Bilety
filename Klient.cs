@@ -10,7 +10,7 @@ namespace Bilety
         private string imie;
         private int nazwisko;
         private int nr_paszportu;
-        private Firma przezFirme;
+        private List<Bilet> bilety;
 
         public Klient()
         {

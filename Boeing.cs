@@ -9,7 +9,7 @@ namespace Bilety
     {
         public Boeing()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
     }
 }

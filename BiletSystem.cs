@@ -8,6 +8,8 @@ namespace Bilety
     public static class BiletSystem
     {
         private static List<Samolot> dostepne_samoloty;
+        private static List<Klient> lista_klientow;
+        private static List<Trasa> lista_tras;
 
         static BiletSystem()
         {

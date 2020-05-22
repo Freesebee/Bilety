@@ -8,12 +8,16 @@ namespace Bilety
     public class Lot
     {
         private Bilety.Samolot samolot;
-        private Lotnisko lotnisko_wylot;
-
-        private Lotnisko lotnisko_ladowanie;
-        private int czas_wylotu;
+        private DateTime czas_wylotu;
+        private Trasa trasa_lotu;
+        private List<Bilet> bilety;
 
         public Lot()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public double czasLotu()
         {
             throw new System.NotImplementedException();
         }
