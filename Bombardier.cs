@@ -7,9 +7,10 @@ namespace Bilety
 {
     public class Bombardier : Samolot
     {
-        public Bombardier()
+        public Bombardier() : base(900, 300) { }
+        public override string ToString()
         {
-            throw new System.NotImplementedException();
+            return "Bombardier";
         }
     }
 }
