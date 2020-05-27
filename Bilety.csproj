@@ -50,6 +50,7 @@
     <Compile Include="Bombardier.cs" />
     <Compile Include="Firma.cs" />
     <Compile Include="Klient.cs" />
+    <Compile Include="Osoba.cs" />
     <Compile Include="Lot.cs" />
     <Compile Include="Lotnisko.cs" />
     <Compile Include="Program.cs" />

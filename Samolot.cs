@@ -9,5 +9,11 @@ namespace Bilety
     {
         protected int zasieg;
         protected int liczba_miejsc;
+        private const int predkosc = 1000;
+        public Samolot(int _zasieg, int _liczba_miejsc)
+        {
+            zasieg = _zasieg;
+            liczba_miejsc = _liczba_miejsc;
+        }
     }
 }

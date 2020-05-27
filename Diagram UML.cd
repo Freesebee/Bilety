@@ -1,58 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Bilety.BiletSystem">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="9.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAgAAAAAgAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ACACAAAAIABAAgAAAAAkAAAAABAAAAAAIACQAAAAgAA=</HashCode>
       <FileName>BiletSystem.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Samolot">
-    <Position X="2.25" Y="2.25" Width="1.5" />
+    <Position X="2.25" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AACAICAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Samolot.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Boeing">
     <Position X="0.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Boeing.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Airbus">
     <Position X="2.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Airbus.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Bombardier">
     <Position X="4" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Bombardier.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Lot">
     <Position X="4" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAIAIAAAAAABAAAAAAAAAAAAAAAAAAAgBAAAAAA=</HashCode>
+      <HashCode>AAAAAAAgIAAAAAAFAAAAAAAAAAAAAAAAAAAgBAAAAAE=</HashCode>
       <FileName>Lot.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Bilety.Klient">
-    <Position X="6" Y="3" Width="1.5" />
+  <Class Name="Bilety.Osoba">
+    <Position X="11" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAAAAACAAAAAAAAAAABACAAAA=</HashCode>
-      <FileName>Klient.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAACEAAAAAAAACAAAAAAAAAAABACAAAA=</HashCode>
+      <FileName>Osoba.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Firma">
-    <Position X="7.75" Y="3" Width="1.5" />
+    <Position X="7.5" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAA=</HashCode>
+      <HashCode>AAAAAAAAAACAAAAEAAAAAAAAGAAAAAAAAAAAAAEAIAA=</HashCode>
       <FileName>Firma.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -64,17 +64,24 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Bilet">
-    <Position X="9.5" Y="3" Width="1.5" />
+    <Position X="5.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAhAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Bilet.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Bilety.Trasa">
-    <Position X="8.5" Y="1" Width="1.5" />
+    <Position X="7.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAIAAAAA=</HashCode>
+      <HashCode>AAAAAgIAAAAAAAAABAAAAAAAQAABAAAAAAAAAIAAAAA=</HashCode>
       <FileName>Trasa.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bilety.Klient">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Klient.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

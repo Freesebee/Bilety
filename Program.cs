@@ -10,7 +10,9 @@ namespace Bilety
     {
         static void Main(string[] args)
         {
-            
+            Osoba k = new Osoba("K","S","123");
+            Lot L = new Lot();
+            Bilet n = new Bilet(k, L, k);
         }
     }
 }

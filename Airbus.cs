@@ -7,9 +7,10 @@ namespace Bilety
 {
     public class Airbus : Samolot
     {
-        public Airbus()
+        public Airbus() : base(1200, 100) { }
+        public override string ToString()
         {
-            throw new System.NotImplementedException();
+            return "Airbus";
         }
     }
 }
