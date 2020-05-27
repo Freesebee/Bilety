@@ -44,16 +44,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Airbus.cs" />
+    <Compile Include="Bilet.cs" />
     <Compile Include="BiletSystem.cs" />
     <Compile Include="Boeing.cs" />
     <Compile Include="Bombardier.cs" />
     <Compile Include="Firma.cs" />
     <Compile Include="Klient.cs" />
+    <Compile Include="Osoba.cs" />
     <Compile Include="Lot.cs" />
     <Compile Include="Lotnisko.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Samolot.cs" />
+    <Compile Include="Trasa.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
