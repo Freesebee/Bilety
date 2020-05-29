@@ -16,6 +16,7 @@ namespace Bilety
         public Lot()
         {
             throw new System.NotImplementedException();
+            Console.WriteLine("elo");
         }
         ~Lot()
         {
