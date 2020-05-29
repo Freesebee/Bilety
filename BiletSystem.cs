@@ -13,6 +13,7 @@ namespace Bilety
         private static List<Osoba> lista_pasazerow;
         private static List<Trasa> lista_tras;
         private static List<Firma> lista_firm;
+        private static List<Lotnisko> lista_lotnisk;
         public static List<Klient> GetKlienci
         { 
             get 
@@ -31,12 +32,50 @@ namespace Bilety
         }
         public static List<Firma> GetFirmy { get => lista_firm; }
         public static List<Osoba> GetOsoby { get => lista_pasazerow; }
+        public static List<Lotnisko> GetLotniska { get => lista_lotnisk; }
         static BiletSystem()
         {
             lista_tras = new List<Trasa>();
             dostepne_samoloty = new List<Samolot>();
             lista_pasazerow = new List<Osoba>();
             lista_firm = new List<Firma>();
+        }
+        public static void DodajLotnisko(int x, int y, string kraj, string miasto)
+        {
+            lista_lotnisk.Add(new Lotnisko(x,y,kraj,miasto));
+        }
+        public static void UsunLotnisko(int x, int y)
+        {
+            Lotnisko dane_lotnisko = lista_lotnisk.Find(oElement => oElement.X == x && oElement.Y == y);
+            if (dane_lotnisko != null) //czy lotnisko zostało znalezione na liście
+            {
+                Trasa uzywana_trasa = lista_tras.Find(lTrasy => lTrasy.Lotnisko_wylotu == dane_lotnisko || lTrasy.Lotnisko_przylotu == dane_lotnisko);
+                if (uzywana_trasa != null) //czy lotnisko jest używane na trasie
+                {
+                    Console.WriteLine($"\nBłąd > Lotnisko o współżędnych ({x},{y})" +
+                        " jest używane na trasie i nie może zostać usunięte.");
+                }
+                else //lotnisko jest na liście i nie jest używane na trasie
+                {
+                    //List<T>.Remove() zwraca 1, jeśli pomyślnie usunie element, w przeciwnym wypadku zwraca 0
+                    if (lista_lotnisk.Remove(dane_lotnisko))
+                        Console.WriteLine("\nUsunięto lotnisko" + dane_lotnisko.ToString());
+                    else Console.WriteLine("\nBłąd > nie usunięto lotniska.");
+                }
+            } //lotnisko nie zostało znalezione na liście
+            else Console.WriteLine($"\nBłąd > Lotnisko o współżędnych ({x},{y}) nie istnieje.");
+        }
+        public static void PokazLotniska()
+        {
+            if (lista_lotnisk.Count != 0)
+            {
+                Console.WriteLine("\nDostępne lotniska:");
+                foreach (Lotnisko oLotnisko in lista_lotnisk)
+                {
+                    Console.WriteLine(oLotnisko.ToString());
+                }
+            }
+            else Console.WriteLine("Brak lotnisk do wyświetlenia.");
         }
         public static void DodajLot(Trasa trasa_lotu)
         {
@@ -54,9 +93,9 @@ namespace Bilety
         {
             throw new System.NotImplementedException();
         }
-        public static void DodajTrase()
+        public static void DodajTrase(Lotnisko wylot, Lotnisko przylot)
         {
-            throw new System.NotImplementedException();
+            lista_tras.Add(new Trasa(wylot, przylot));
         }
         public static void UsunTrase()
         {
@@ -68,21 +107,35 @@ namespace Bilety
         }
         public static bool CzyTekst(string text)
         {
-            foreach (char c in text)
+            try
             {
-                if (!char.IsLetter(c))
-                    throw new NiepoprawnaInformacjaException("Podany tekst zawiera cyfry");
+                foreach (char c in text)
+                {
+                    if (!char.IsLetter(c))
+                        return false;
+                }
+                return true;
             }
-            return true;
+            catch (Exception)
+            {
+                return false;
+            }
         }
         public static bool CzyNumer(string nr)
         {
-            foreach (char c in nr)
+            try
             {
-                if (!char.IsDigit(c))
-                    throw new NiepoprawnaInformacjaException("Numer zawiera inne znaki niż cyfry");
+                foreach (char c in nr)
+                {
+                    if (!char.IsDigit(c))
+                        return false;
+                }
+                return true;
             }
-            return true;
+            catch (Exception)
+            {
+                return false;
+            }
         }
         private static bool CzyWystepujeNr<T>(string nr, List<T> lista)
         {
@@ -110,7 +163,7 @@ namespace Bilety
             }
             catch (Exception e)
             {    //Poinformowanie o napotkanym błędzie przy wprowadzeniu informacji
-                string komunikat = ""; 
+                string komunikat = "";
                 if (e is DuplikatNumeruException)
                     komunikat = "Podany numer paszportu wystepuje w systemie, wprowadz inny";
                 else if (e is NiepoprawnaInformacjaException)
