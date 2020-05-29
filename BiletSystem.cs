@@ -86,7 +86,7 @@ namespace Bilety
         }
         private static bool CzyWystepujeNr<T>(string nr, List<T> lista)
         {
-            if(CzyNumer(nr) && lista!=null) //Sprawdzenie poprawności numeru
+            if(CzyNumer(nr) && lista!=null) //Sprawdzenie poprawności numeru i listy
                 foreach (T item in lista) //Sprawdzenie unikalności numeru w systemie
                 {
                     if ((item as Klient).CzyTenSamUnikalnyNr(nr))
@@ -104,16 +104,19 @@ namespace Bilety
         public static void DodajPasazera(string imie, string naziwsko, string nr_paszportu)
         {
             try
-            {
-                if (!CzyWystepujeNr(nr_paszportu, lista_pasazerow)) //Sprawdzenie unikalności numeru paszportu
+            {   //Sprawdzenie unikalności numeru paszportu
+                if (!CzyWystepujeNr<Osoba>(nr_paszportu, lista_pasazerow)) 
                     lista_pasazerow.Add(new Osoba(imie, naziwsko, nr_paszportu));
             }
             catch (Exception e)
-            {
+            {    //Poinformowanie o napotkanym błędzie przy wprowadzeniu informacji
+                string komunikat = ""; 
                 if (e is DuplikatNumeruException)
-                    Console.WriteLine("Podany numer paszportu wystepuje w systemie, wprowadz inny");
-                if (e is NiepoprawnaInformacjaException)
-                    Console.WriteLine("Numer paszportu moze zawierac jedynie cyfry, a nazwisko i imie jedynie litery");
+                    komunikat = "Podany numer paszportu wystepuje w systemie, wprowadz inny";
+                else if (e is NiepoprawnaInformacjaException)
+                    komunikat = "Numer paszportu moze zawierac jedynie cyfry, a nazwisko i imie jedynie litery";
+                Console.WriteLine(komunikat);
+                throw new BrakObiektuDoDodaniaException("Nie można dodac niepoprawnego obiektu");
             }
         }
         public static void UsunPasazera(Osoba pasazer)
@@ -123,16 +126,19 @@ namespace Bilety
         public static void DodajFirme(string nrKRS, string nazwa)
         {
             try
-            {
-                if (!CzyWystepujeNr(nrKRS, lista_firm)) //Sprawdzenie unikalności numeru KRS
+            {   //Sprawdzenie unikalności numeru KRS
+                if (!CzyWystepujeNr<Firma>(nrKRS, lista_firm)) 
                     lista_firm.Add(new Firma(nrKRS, nazwa));
             }
             catch (Exception e)
-            {
+            {   //Poinformowanie o napotkanym błędzie przy wprowadzeniu informacji
+                string komunikat = "";
                 if (e is DuplikatNumeruException)
-                    Console.WriteLine("Podany numer KRS wystepuje w systemie, wprowadz inny");
-                if (e is NiepoprawnaInformacjaException)
-                    Console.WriteLine("Numer KRS moze zawierac jedynie cyfry");
+                    komunikat = "Podany numer KRS wystepuje w systemie, wprowadz inny";
+                else if (e is NiepoprawnaInformacjaException)
+                    komunikat = "Numer KRS moze zawierac jedynie cyfry";
+                Console.WriteLine(komunikat);
+                throw new BrakObiektuDoDodaniaException("Nie można dodac niepoprawnego obiektu");
             }
         }
         public static void UsunFirme(Firma _firma)

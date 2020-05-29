@@ -14,4 +14,8 @@ namespace Bilety
     {
         public NiepoprawnaInformacjaException(string text) : base(text) { }
     }
+    class BrakObiektuDoDodaniaException : ApplicationException
+    {
+        public BrakObiektuDoDodaniaException(string text) : base(text) { }
+    }
 }
