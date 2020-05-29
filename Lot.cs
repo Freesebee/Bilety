@@ -8,15 +8,14 @@ namespace Bilety
 {
     public class Lot
     {
-        private Bilety.Samolot samolot;
+        private Samolot samolot;
         private DateTime czas_wylotu;
-        private Trasa trasa_lotu;
         private List<Bilet> bilety;
 
-        public Lot()
+        public Lot(DateTime czaswylotu)
         {
-            throw new System.NotImplementedException();
-            Console.WriteLine("elo");
+            czas_wylotu = czaswylotu;
+            samolot = DobierzSamolot();
         }
         ~Lot()
         {
@@ -27,7 +26,7 @@ namespace Bilety
         {
             throw new System.NotImplementedException();
         }
-        public void DobierzSamolot()
+        private Samolot DobierzSamolot()
         {
             throw new System.NotImplementedException();
         }

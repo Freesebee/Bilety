@@ -33,6 +33,7 @@ namespace Bilety
         public static List<Firma> GetFirmy { get => lista_firm; }
         public static List<Osoba> GetOsoby { get => lista_pasazerow; }
         public static List<Lotnisko> GetLotniska { get => lista_lotnisk; }
+        public static List<Samolot> GetSamoloty { get => dostepne_samoloty; }
         static BiletSystem()
         {
             lista_tras = new List<Trasa>();
@@ -77,13 +78,13 @@ namespace Bilety
             }
             else Console.WriteLine("Brak lotnisk do wyświetlenia.");
         }
-        public static void DodajLot(Trasa trasa_lotu)
+        public static void DodajLot(Trasa trasa, DateTime czas_wylot)
         {
-            throw new System.NotImplementedException();
+            trasa.GetLoty.Add(new Lot(czas_wylot));
         }
-        public static void UsunLot()
+        public static void UsunLot(Lot lot)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
         public static void ZapiszStan()
         {

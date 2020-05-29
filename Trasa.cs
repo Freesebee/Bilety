@@ -11,7 +11,8 @@ namespace Bilety
         public Lotnisko Lotnisko_wylotu { get; private set; }
         public double Odleglosc { get; private set; }
         public double CzasLotu { get; private set; }
-        private List<Lot> lista_lotow = new List<Lot>();
+        private List<Lot> lista_lotow;
+        public List<Lot> GetLoty { get => lista_lotow; }
 
         public Trasa(Lotnisko wylot, Lotnisko przylot)
         {
@@ -19,15 +20,8 @@ namespace Bilety
             Lotnisko_przylotu = przylot;
             Odleglosc = LiczOdleglosc();
             CzasLotu = CzasLotuNaTrasie(Odleglosc);
+            lista_lotow = new List<Lot>();
             Console.WriteLine($"Utworzono trasę {przylot.Miasto} -> {wylot.Miasto}");
-        }
-        public void DodajLot(Lot lot)
-        {
-            lista_lotow.Add(lot);
-        }
-        public void UsunLot(Lot lot)
-        {
-            throw new NotImplementedException();
         }
         public double LiczOdleglosc()
         {
