@@ -13,16 +13,32 @@ namespace Bilety
         private string nr_paszportu;
         private List<Bilet> bilety;
 
-        public Osoba(string imie, string nazwisko, string _nr_paszportu)
+        public Osoba(string _imie, string _nazwisko, string _nr_paszportu)
         {
-            this.imie = imie;
-            this.nazwisko = nazwisko;
+            BiletSystem.CzyNumer(_nr_paszportu); //Sprawdzenie poprawności numeru paszportu
+            BiletSystem.CzyTekst(_imie); //Sprawdzenie poprawności imienia
+            BiletSystem.CzyTekst(_nazwisko); //Sprawdzenie poprawności nazwiska
+            imie = _imie;
+            nazwisko = _nazwisko;
             nr_paszportu = _nr_paszportu;
+            bilety = new List<Bilet>();
         }
         ~Osoba()
         {
-            bilety.Clear();
+            if(bilety!=null) bilety.Clear();
             bilety = null;
+        }
+        public override bool CzyZawieraZnaki(string tekst)
+        {
+            if (imie.Contains(tekst)
+                || nazwisko.Contains(tekst)
+                || nr_paszportu.Contains(tekst)) return true;
+            else return false;
+        }
+        public override bool CzyTenSamUnikalnyNr(string nr) 
+        {
+            if (string.Equals(nr,nr_paszportu)) return true;
+            else return false;
         }
         public override string ToString()
         {
