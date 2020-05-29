@@ -30,10 +30,19 @@ namespace Bilety
         }
         public override bool CzyZawieraZnaki(string tekst)
         {
-            if (imie.Contains(tekst)
+            try
+            {
+                if (imie.Contains(tekst)
                 || nazwisko.Contains(tekst)
-                || nr_paszportu.Contains(tekst)) return true;
-            else return false;
+                || nr_paszportu.Contains(tekst)) 
+                    return true;
+                else return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
         public override bool CzyTenSamUnikalnyNr(string nr) 
         {
