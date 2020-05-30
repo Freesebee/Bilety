@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Bilety
 {
@@ -15,9 +11,9 @@ namespace Bilety
         private static List<Firma> lista_firm;
         private static List<Lotnisko> lista_lotnisk;
         public static List<Klient> GetKlienci
-        { 
-            get 
-            {//Zwrócenie utworzonej listy z elementów list firm i pasażerów
+        {
+            get //Zwrócenie utworzonej listy z elementów list firm i pasażerów
+            {
                 List<Klient> L = new List<Klient>();
                 foreach (Firma item in lista_firm)
                 {
@@ -34,6 +30,7 @@ namespace Bilety
         public static List<Osoba> GetOsoby { get => lista_pasazerow; }
         public static List<Lotnisko> GetLotniska { get => lista_lotnisk; }
         public static List<Samolot> GetSamoloty { get => dostepne_samoloty; }
+
         static BiletSystem()
         {
             lista_tras = new List<Trasa>();
@@ -41,6 +38,7 @@ namespace Bilety
             lista_pasazerow = new List<Osoba>();
             lista_firm = new List<Firma>();
         }
+
         public static void DodajLotnisko(int x, int y, string kraj, string miasto)
         {
             lista_lotnisk.Add(new Lotnisko(x,y,kraj,miasto));
@@ -84,6 +82,8 @@ namespace Bilety
         }
         public static void UsunLot(Lot lot)
         {
+            //Powinno również usuwać bilety
+            //z listy biletów danego lotu
             throw new NotImplementedException();
         }
         public static void ZapiszStan()
@@ -104,7 +104,24 @@ namespace Bilety
         }
         public static void RezerwujBilet(Klient kupujacy_bilet, Lot dany_lot, Osoba pasazer)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                foreach (Bilet bilet in dany_lot.GetBilety)
+                {
+                    if (pasazer.CzyPosiadaTakiBilet(bilet))
+                    {
+                        throw new NiepoprawnaInformacjaException("Pasazer juz posiada taki bilet");
+                    }
+                }
+                Bilet B = new Bilet(pasazer, dany_lot, kupujacy_bilet);
+                dany_lot.GetBilety.Add(B);
+                pasazer.PrzekazBilet(B);
+                Console.WriteLine("Pomyslnie zarezerwowano bilet");
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Nie udalo sie zarezerwowac biletu");
+            }
         }
         public static bool CzyTekst(string text)
         {
@@ -138,39 +155,48 @@ namespace Bilety
                 return false;
             }
         }
-        private static bool CzyWystepujeNr<T>(string nr, List<T> lista)
+        private static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
         {
             if(CzyNumer(nr) && lista!=null) //Sprawdzenie poprawności numeru i listy
+            {
                 foreach (T item in lista) //Sprawdzenie unikalności numeru w systemie
                 {
-                    if ((item as Klient).CzyTenSamUnikalnyNr(nr))
+                    if (item is Osoba)
                     {
-                        string komunikat = "";
-                        if (item is Osoba)
-                            komunikat = "W systemie istnieje pasazer o danym numerze paszportu";
-                        else if (item is Firma)
-                            komunikat = "W systemie istnieje firma o danym numerze KRS";
-                        throw new DuplikatNumeruException(komunikat);
+                        if ((item as Osoba).CzyTenSamUnikalnyNr(nr))
+                        {
+                            Console.WriteLine("W systemie istnieje pasazer o danym numerze paszportu");
+                        }
+                    }
+                    else if (item is Firma)
+                    {
+                        if ((item as Firma).CzyTenSamUnikalnyNr(nr))
+                        {
+                            Console.WriteLine("W systemie istnieje firma o danym numerze KRS");
+                        }
                     }
                 }
+            }
             return false;
         }
         public static void DodajPasazera(string imie, string naziwsko, string nr_paszportu)
         {
-            try
-            {   //Sprawdzenie unikalności numeru paszportu
-                if (!CzyWystepujeNr<Osoba>(nr_paszportu, lista_pasazerow)) 
+            try  //Sprawdzenie unikalności numeru paszportu
+            {   
+                if (!CzyWystepujeNrKlienta<Osoba>(nr_paszportu, lista_pasazerow))
+                {
                     lista_pasazerow.Add(new Osoba(imie, naziwsko, nr_paszportu));
+                }
+                Console.WriteLine("Pomyslnie dodano pasazera do systemu");
             }
-            catch (Exception e)
-            {    //Poinformowanie o napotkanym błędzie przy wprowadzeniu informacji
-                string komunikat = "";
-                if (e is DuplikatNumeruException)
-                    komunikat = "Podany numer paszportu wystepuje w systemie, wprowadz inny";
-                else if (e is NiepoprawnaInformacjaException)
-                    komunikat = "Numer paszportu moze zawierac jedynie cyfry, a nazwisko i imie jedynie litery";
-                Console.WriteLine(komunikat);
-                throw new BrakObiektuDoDodaniaException("Nie można dodac niepoprawnego obiektu");
+            catch (DuplikatNumeruException)
+            {
+                Console.WriteLine("Podany numer paszportu wystepuje w systemie, wprowadz inny");
+            }
+            catch (NiepoprawnaInformacjaException)
+            {
+                Console.WriteLine("Numer paszportu moze zawierac " +
+                    "jedynie cyfry, a nazwisko i imie jedynie litery");
             }
         }
         public static void UsunPasazera(Osoba pasazer)
@@ -179,20 +205,21 @@ namespace Bilety
         }
         public static void DodajFirme(string nrKRS, string nazwa)
         {
-            try
-            {   //Sprawdzenie unikalności numeru KRS
-                if (!CzyWystepujeNr<Firma>(nrKRS, lista_firm)) 
+            try //Sprawdzenie unikalności numeru KRS
+            {   
+                if (!CzyWystepujeNrKlienta<Firma>(nrKRS, lista_firm))
+                {
                     lista_firm.Add(new Firma(nrKRS, nazwa));
+                } 
+                Console.WriteLine("Pomyslnie dodano firme do systemu");
             }
-            catch (Exception e)
-            {   //Poinformowanie o napotkanym błędzie przy wprowadzeniu informacji
-                string komunikat = "";
-                if (e is DuplikatNumeruException)
-                    komunikat = "Podany numer KRS wystepuje w systemie, wprowadz inny";
-                else if (e is NiepoprawnaInformacjaException)
-                    komunikat = "Numer KRS moze zawierac jedynie cyfry";
-                Console.WriteLine(komunikat);
-                throw new BrakObiektuDoDodaniaException("Nie można dodac niepoprawnego obiektu");
+            catch(DuplikatNumeruException)
+            {
+                Console.WriteLine("Podany numer KRS wystepuje w systemie, wprowadz inny");
+            }
+            catch (NiepoprawnaInformacjaException)
+            {
+                Console.WriteLine("Numer KRS moze zawierac jedynie cyfry");
             }
         }
         public static void UsunFirme(Firma _firma)
@@ -201,7 +228,6 @@ namespace Bilety
         }
         public static List<Klient> ZnajdzPoTekscie<T>(string tekst, List<T> lista)
         {
-            //Znajdowanie Klienta (Firmy/Osoby) na podstawie wprowadzonych informacji
             List<Klient> pasujace = new List<Klient>();
             foreach(T item in lista)
             {

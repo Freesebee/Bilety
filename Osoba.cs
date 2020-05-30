@@ -28,6 +28,19 @@ namespace Bilety
             if(bilety!=null) bilety.Clear();
             bilety = null;
         }
+        public void PrzekazBilet(Bilet b)
+        {
+            bilety.Add(b);
+        }
+        public bool CzyPosiadaTakiBilet(Bilet b)
+        {
+            foreach (Bilet bilet in bilety)
+            {
+                if (bilet == b)
+                    return true;
+            }
+            return false;
+        }
         public override bool CzyZawieraZnaki(string tekst)
         {
             try

@@ -11,6 +11,7 @@ namespace Bilety
         private Samolot samolot;
         private DateTime czas_wylotu;
         private List<Bilet> bilety;
+        public List<Bilet> GetBilety { get => bilety; }
 
         public Lot(DateTime czaswylotu)
         {
