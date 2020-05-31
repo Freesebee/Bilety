@@ -20,7 +20,7 @@ namespace Bilety
                 nazwa = nazwa_firmy;
                 lista_klientow = new List<Osoba>();
             }
-            else throw new NiepoprawnaInformacjaException("Bledny numer KRS");
+            else throw new NiepoprawnaInformacjaException("Numer KRS musi sie skladac jedynie z cyfr");
         }
         ~Firma()
         {

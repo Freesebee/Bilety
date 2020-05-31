@@ -17,9 +17,18 @@ namespace Bilety
 
         public Osoba(string _imie, string _nazwisko, string _nr_paszportu)
         {
-            BiletSystem.CzyNumer(_nr_paszportu); //Sprawdzenie poprawności numeru paszportu
-            BiletSystem.CzyTekst(_imie); //Sprawdzenie poprawności imienia
-            BiletSystem.CzyTekst(_nazwisko); //Sprawdzenie poprawności nazwiska
+            if(!BiletSystem.CzyNumer(_nr_paszportu))
+            {
+                throw new NiepoprawnaInformacjaException("Numer paszportu musi zawierac tylko cyfry");
+            }
+            if (!BiletSystem.CzyTekst(_imie))
+            {
+                throw new NiepoprawnaInformacjaException("Imie moze zawierac tylko litery");
+            }
+            if (!BiletSystem.CzyTekst(_nazwisko))
+            {
+                throw new NiepoprawnaInformacjaException("Nazwisko moze zawierac tylko litery");
+            }
             imie = _imie;
             nazwisko = _nazwisko;
             nr_paszportu = _nr_paszportu;
