@@ -125,14 +125,19 @@ namespace Bilety
         }
         public static bool CzyTekst(string text)
         {
+            
             try
             {
-                foreach (char c in text)
+                if (text == "")
                 {
-                    if (!char.IsLetter(c))
-                        return false;
+                    foreach (char c in text)
+                    {
+                        if (!char.IsLetter(c))
+                            return false;
+                    }
+                    return true;
                 }
-                return true;
+                else return false;
             }
             catch (Exception)
             {
@@ -143,17 +148,35 @@ namespace Bilety
         {
             try
             {
-                foreach (char c in nr)
+                if(nr!="")
                 {
-                    if (!char.IsDigit(c))
-                        return false;
+                    foreach (char c in nr)
+                    {
+                        if (!char.IsDigit(c))
+                            return false;
+                    }
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
                 return false;
             }
+        }
+        public static bool CzyWystepujeNazwaFirmy(string nazwa)
+        {
+            foreach (Firma item in GetFirmy)
+            {
+                if (item.CzyTaSamaNazwaFirmy(nazwa))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         private static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
         {
@@ -166,6 +189,7 @@ namespace Bilety
                         if ((item as Osoba).CzyTenSamUnikalnyNr(nr))
                         {
                             Console.WriteLine("W systemie istnieje pasazer o danym numerze paszportu");
+                            return true;
                         }
                     }
                     else if (item is Firma)
@@ -173,6 +197,7 @@ namespace Bilety
                         if ((item as Firma).CzyTenSamUnikalnyNr(nr))
                         {
                             Console.WriteLine("W systemie istnieje firma o danym numerze KRS");
+                            return true;
                         }
                     }
                 }
@@ -199,15 +224,34 @@ namespace Bilety
                     "jedynie cyfry, a nazwisko i imie jedynie litery");
             }
         }
-        public static void UsunPasazera(Osoba pasazer)
+        public static void UsunPasazeraPoNumerze(string nr)
         {
-            lista_pasazerow.Remove(pasazer);
+            try
+            {
+                if (CzyWystepujeNrKlienta(nr, lista_pasazerow))
+                {
+                    foreach (Osoba item in ZnajdzPoTekscie(nr, lista_pasazerow))
+                    {
+                        lista_pasazerow.Remove(item);
+                    }
+                    Console.WriteLine("Pomyslnie usunieto pasazera z systemu");
+                }
+                else
+                {
+                    Console.WriteLine("Brak pasazera o podanym numerze");
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nie udalo sie usunac pasazera");
+            }
         }
         public static void DodajFirme(string nrKRS, string nazwa)
         {
-            try //Sprawdzenie unikalności numeru KRS
-            {   
-                if (!CzyWystepujeNrKlienta<Firma>(nrKRS, lista_firm))
+            try //Sprawdzenie unikalności numeru KRS i nazwy
+            {
+                if (!CzyWystepujeNrKlienta<Firma>(nrKRS, lista_firm)
+                            && !CzyWystepujeNazwaFirmy(nazwa))
                 {
                     lista_firm.Add(new Firma(nrKRS, nazwa));
                 } 
@@ -222,9 +266,27 @@ namespace Bilety
                 Console.WriteLine("Numer KRS moze zawierac jedynie cyfry");
             }
         }
-        public static void UsunFirme(Firma _firma)
+        public static void UsunFirmePoNumerze(string nr)
         {
-            lista_firm.Remove(_firma);
+            try
+            {
+                if (CzyWystepujeNrKlienta(nr, lista_firm))
+                {
+                    foreach (Firma item in ZnajdzPoTekscie(nr, lista_firm))
+                    {
+                        lista_firm.Remove(item);
+                    }
+                    Console.WriteLine("Pomyslnie usunieto firme z systemu");
+                }
+                else
+                {
+                    Console.WriteLine("Brak firmy o podanym numerze KRS");
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nie udalo sie usunac firmy");
+            }
         }
         public static List<Klient> ZnajdzPoTekscie<T>(string tekst, List<T> lista)
         {
