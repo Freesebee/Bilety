@@ -86,5 +86,10 @@ namespace Bilety
         {
             return $"{CzasLotu.Hours}h {CzasLotu.Minutes}m";
         }
+        public string DaneDoZapisu()
+        {
+            return $"{czas_wylotu.Day},{czas_wylotu.Month}," +
+                $"{czas_wylotu.Year},{czas_wylotu.Hour},{czas_wylotu.Minute}";
+        }
     }
 }

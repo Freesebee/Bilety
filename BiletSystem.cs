@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace Bilety
@@ -34,6 +35,7 @@ namespace Bilety
         public static List<Osoba> GetOsoby { get => lista_pasazerow; }
         public static List<Lotnisko> GetLotniska { get => lista_lotnisk; }
         public static List<Samolot> GetSamoloty { get => dostepne_samoloty; }
+        public static List<Trasa> GetTrasy { get => lista_tras; }
 
         static BiletSystem()
         {
@@ -44,16 +46,92 @@ namespace Bilety
             lista_lotnisk = new List<Lotnisko>();
             IdentyfikatorLotow = 0;
         }
-        public static void ZapiszStan(string Osobyfilepath)
+
+        //Zapisywanie stanu systemu --------------
+
+        public static void ZapiszStan(string file_path)
+        {//Do Jacka: używaj ZapiszStan(""); 
+         //wtedy pliki zapisze w folderze bin/Debug projektu
+            ZapiszOsoby($@"{file_path}Osoby.txt");
+            ZapiszSamoloty($@"{file_path}Samoloty.txt");
+            ZapiszFirmy($@"{file_path}Firmy.txt");
+            ZapiszLotniska($@"{file_path}Lotniska.txt");
+            ZapiszTrasyZLotami($@"{file_path}Trasy_loty.txt");
+            ZapiszBilety($@"{file_path}Bilety.txt");
+        }
+        private static void ZapiszOsoby(string nazwa_pliku)
         {
-            List<string> lines = File.ReadAllLines(Osobyfilepath).ToList();
+            List<string> linie = new List<string>();
+            foreach (Osoba item in GetOsoby)
+            {
+                linie.Add(item.DaneDoZapisu());
+            }
+
+            File.WriteAllLines(nazwa_pliku, linie);
+        }
+        private static void ZapiszFirmy(string nazwa_pliku)
+        {
+            List<string> linie = new List<string>();
+            foreach (Firma item in GetFirmy)
+            {
+                linie.Add(item.DaneDoZapisu());
+            }
+            File.WriteAllLines(nazwa_pliku, linie);
+        }
+        private static void ZapiszSamoloty(string nazwa_pliku)
+        {
+            short liczba_boeing = 0, liczba_airbus = 0, liczba_bombardier = 0;
+            foreach (Samolot item in GetSamoloty)
+            {
+                if (item is Bombardier) liczba_bombardier++;
+                else if (item is Airbus) liczba_airbus++;
+                else if (item is Boeing) liczba_boeing++;
+            }
+            List<string> linie = new List<string>();
+            linie.Add($"boeing,{liczba_boeing},airbus,{liczba_airbus},bombardier,{liczba_bombardier}");
+
+            File.WriteAllLines(nazwa_pliku, linie);
+        }
+        private static void ZapiszLotniska(string nazwa_pliku)
+        {
+            List<string> linie = new List<string>();
+            foreach(Lotnisko item in GetLotniska)
+            {
+                linie.Add(item.DaneDoZapisu());
+            }
+            File.WriteAllLines(nazwa_pliku, linie);
+        }
+        private static void ZapiszTrasyZLotami(string nazwa_pliku)
+        {
+            List<string> linie = new List<string>();
+            foreach (Trasa item in GetTrasy)
+            {
+                linie.Add(item.DaneDoZapisu());
+            }
+            File.WriteAllLines(nazwa_pliku, linie);
+        }
+        private static void ZapiszBilety(string nazwa_pliku)
+        {
+            List<string> linie = new List<string>();
+            foreach(Trasa T in GetTrasy)
+            {
+                foreach(Lot L in T.GetLoty)
+                {
+                    foreach(Bilet B in L.GetBilety)
+                    {
+                        linie.Add(B.DaneDoZapisu());
+                    }
+                }
+            }
+            File.WriteAllLines(nazwa_pliku, linie);
         }
 
         //Wczytywanie statu systemu --------------
         
-        public static void WczytajStan()
-        {
-            WczytajOsoby(@"Osoby.txt");
+        public static void WczytajStan(string file_path)
+        { //Do Jacka: używaj WczytajStan(""); 
+          //wtedy pliki zapisze w folderze bin/Debug projektu
+            WczytajOsoby($@"{file_path}Osoby.txt");
             WczytajFirmy(@"Firmy.txt");
             WczytajLotniska(@"Lotniska.txt");
             WczytajSamoloty(@"Samoloty.txt");
@@ -70,7 +148,7 @@ namespace Bilety
                     string[] slowa = linia.Split(',');
                     DodajPasazera(slowa[0], slowa[1], slowa[2]);
                 }
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano osoby do systemu");
             }
             else
@@ -97,7 +175,7 @@ namespace Bilety
                         DodajKlientowFirmy(firma[0], paszporty[i]);
                     }
                 }
-                Console.Clear();
+               // Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano firmy do systemu");
             }
             else
@@ -105,7 +183,7 @@ namespace Bilety
                 Console.WriteLine("Brak pliku zawierajacego liste firm do wczytania");
             }
         }
-        public static void WczytajLotniska(string nazwa_pliku)
+        private static void WczytajLotniska(string nazwa_pliku)
         {
             if (File.Exists(nazwa_pliku))
             {
@@ -115,7 +193,7 @@ namespace Bilety
                     string[] slowa = linia.Split(',');
                     DodajLotnisko(int.Parse(slowa[0]), int.Parse(slowa[1]), slowa[2], slowa[3]);
                 }
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano lotniska do systemu");
             }
             else
@@ -123,24 +201,23 @@ namespace Bilety
                 Console.WriteLine("Brak pliku zawierajacego liste lotnisk do wczytania");
             }
         }
-        public static void WczytajSamoloty(string nazwa_pliku)
+        private static void WczytajSamoloty(string nazwa_pliku)
         {
             if (File.Exists(nazwa_pliku))
             {
                 List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+                int liczba_samolotow = 0;
                 foreach (string linia in linie)
                 {
                     string[] slowa = linia.Split(',');
-                    for (int i = 0; i < slowa.Length/2; i++)
+                    for (int j = 0; j < int.Parse(slowa[1]); j++)
                     {
-                        for (int j = 0; j < int.Parse(slowa[(i*2)+1]); j++)
-                        {
-                            DodajSamolot(slowa[i * 2]);
-                        }
+                        DodajSamolot(slowa[0]);
+                        liczba_samolotow++;
                     }
                 }
-                Console.Clear();
-                Console.WriteLine("Pomyslnie wczytano samoloty do systemu");
+                //Console.Clear();
+                Console.WriteLine($"Pomyslnie wczytano {liczba_samolotow} samolotow do systemu");
             }
             else
             {
@@ -166,12 +243,12 @@ namespace Bilety
                     {
                         string[] lot = loty[i].Split(',');
 
-                        DodajLotCyklicznie(int.Parse(lot[0]), int.Parse(lot[1]), nr_lini,
-                            int.Parse(lot[2]), int.Parse(lot[3]), int.Parse(lot[4]), int.Parse(lot[5]),
-                            int.Parse(lot[6]));
+                        DodajLotNaTrasie(nr_lini, int.Parse(lot[0]),
+                            int.Parse(lot[1]), int.Parse(lot[2]),
+                            int.Parse(lot[3]), int.Parse(lot[4]));
                     }
                 }
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano trasy i loty do systemu");
             }
             else
@@ -191,7 +268,7 @@ namespace Bilety
                         int.Parse(slowa[1]), 
                         ZnajdzKonkretnegoKlienta(slowa[2],GetOsoby) as Osoba);
                 }
-                Console.Clear();
+                //Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano bilety do systemu");
             }
             else
@@ -759,7 +836,13 @@ namespace Bilety
             Lot dany_lot = null;
             foreach (Trasa T in lista_tras)
             {
-                dany_lot = T.GetLoty.Find(oLot => oLot.IdLotu == _idLotu);
+                foreach(Lot L in T.GetLoty)
+                {
+                    if(L.IdLotu == _idLotu)
+                    {
+                        dany_lot = L;
+                    }
+                }
             }
             if (dany_lot == null) throw new NiepoprawnyNumerException("Niepoprawne ID Lotu");
             return dany_lot;

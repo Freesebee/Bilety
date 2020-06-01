@@ -35,5 +35,10 @@ namespace Bilety
                 return false;
             else return true;
         }
+        public string DaneDoZapisu()
+        {
+            return $"{kupujacy.GetNr}," +
+                $"{wybrany_lot.IdLotu},{pasazer.GetNr}";
+        }
     }
 }

@@ -9,5 +9,10 @@ namespace Bilety
     {
         public virtual bool CzyZawieraZnaki(string tekst) { return false; }
         public virtual bool CzyTenSamUnikalnyNr(string nr) { return false; }
+        public virtual string DaneDoZapisu()
+        {
+            return $"";
+        }
+        public abstract string GetNr { get; }
     }
 }

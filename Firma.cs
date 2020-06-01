@@ -12,7 +12,7 @@ namespace Bilety
         private string nazwa;
         private List<Osoba> lista_klientow;
         public List<Osoba> GetKlienci { get => lista_klientow; }
-
+        public override string GetNr { get => nr_KRS; }
         public Firma(string KRS, string nazwa_firmy)
         {
             if (BiletSystem.CzyNumer(KRS)) //Sprawdzenie poprawności numeru KRS
@@ -55,6 +55,16 @@ namespace Bilety
         {
             if (nr_KRS.Equals(nr)) return true;
             else return false;
+        }
+        public override string DaneDoZapisu()
+        {
+            string wynik = $"{nr_KRS},{nazwa};";
+            for (int i = 0; i < GetKlienci.Count(); i++)
+            {
+                if (i > 0) wynik += ",";
+                wynik += $"{GetKlienci[i].GetNr}";
+            }
+            return wynik;
         }
         public bool CzyTaSamaNazwaFirmy(string nr)
         {

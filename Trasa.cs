@@ -47,5 +47,20 @@ namespace Bilety
                 }
             } else Console.WriteLine("Brak lotow do wyswietlenia.");
         }
+        public string DaneDoZapisu()
+        {
+            string wynik = $"{BiletSystem.GetLotniska.IndexOf(Lotnisko_wylotu)+1}," +
+                $"{BiletSystem.GetLotniska.IndexOf(Lotnisko_przylotu)+1};";
+            short i = 1;
+            foreach (Lot item in GetLoty)
+            {
+                wynik += item.DaneDoZapisu();
+                if(i++ < GetLoty.Count())
+                {
+                    wynik += ".";
+                }
+            }
+            return wynik;
+        }
     }
 }

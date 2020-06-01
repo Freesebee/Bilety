@@ -14,6 +14,7 @@ namespace Bilety
         private string nazwisko;
         private string nr_paszportu;
         private List<Bilet> bilety;
+        public override string GetNr { get => nr_paszportu; }
 
         public Osoba(string _imie, string _nazwisko, string _nr_paszportu)
         {
@@ -76,6 +77,10 @@ namespace Bilety
         public override string ToString()
         {
             return $"Numer paszportu:{nr_paszportu} - {nazwisko} {imie}";
+        }
+        public override string DaneDoZapisu()
+        {
+            return $"{imie},{nazwisko},{nr_paszportu}";
         }
         public static bool operator == (Osoba a, Osoba b)
         {

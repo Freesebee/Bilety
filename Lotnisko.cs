@@ -27,5 +27,9 @@ namespace Bilety
                 "\nMiasto: " + Miasto +
                 $"\nWspółrzędne: ({X},{Y})";
         }
+        public string DaneDoZapisu()
+        {
+            return $"{X},{Y},{Kraj},{Miasto}";
+        }
     }
 }
