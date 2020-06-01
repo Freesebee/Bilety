@@ -8,8 +8,6 @@ namespace Bilety
     {
         static void Main()
         {
-
-
             int Switch = 12, Switch1 = 12;
             int nrTrasy, _nrSamolotu ;
             string _file_path, _rodzaj;
@@ -21,8 +19,7 @@ namespace Bilety
             List<T> _lista;
             int nrLotniska;
             int nrW , nrP;
-            int nrTrasy;
-            int coIleDni, ileLotow, nrTrasy, dzien, miesiac,rok, godzina, minuta;
+            int coIleDni, ileLotow, dzien, miesiac,rok, godzina, minuta;
             int _idLotu;
             Klient kupujacy_bilet; 
             Firma _kupujacy_bilety;

@@ -50,7 +50,7 @@ namespace Bilety
         //Zapisywanie stanu systemu --------------
 
         public static void ZapiszStan(string file_path)
-        {//Do Jacka: używaj ZapiszStan(""); 
+        {//DO JACKA: używaj ZapiszStan(""); 
          //wtedy pliki zapisze w folderze bin/Debug projektu
             ZapiszOsoby($@"{file_path}Osoby.txt");
             ZapiszSamoloty($@"{file_path}Samoloty.txt");
@@ -58,6 +58,8 @@ namespace Bilety
             ZapiszLotniska($@"{file_path}Lotniska.txt");
             ZapiszTrasyZLotami($@"{file_path}Trasy_loty.txt");
             ZapiszBilety($@"{file_path}Bilety.txt");
+            Console.WriteLine("Zapisano aktualny stan systemu");
+            //Console.Clear(); <======== ODKOMENTUJ ABY CZYŚCIŁO KONSOLĘ
         }
         private static void ZapiszOsoby(string nazwa_pliku)
         {
@@ -137,6 +139,8 @@ namespace Bilety
             WczytajSamoloty(@"Samoloty.txt");
             WczytajTrasyZLotami(@"Trasy_loty.txt");
             WczytajBilety(@"Bilety.txt");
+            Console.WriteLine();
+            //Console.Clear(); <======== ODKOMENTUJ ABY CZYŚCIŁO KONSOLĘ
         }
         private static void WczytajOsoby(string nazwa_pliku)
         {
@@ -146,7 +150,7 @@ namespace Bilety
                 foreach (string linia in linie)
                 {
                     string[] slowa = linia.Split(',');
-                    DodajPasazera(slowa[0], slowa[1], slowa[2]);
+                    DodajOsobe(slowa[0], slowa[1], slowa[2]);
                 }
                 //Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano osoby do systemu");
@@ -278,7 +282,7 @@ namespace Bilety
         }
 
         //Rezerwacja ------------
-
+        //DO JACKA - gdy bedziesz chcial wczytac z klawiatury liczby to uzywaj "int.Parse(twoj_string)"
         public static void RezerwujBiletyGrupie(Firma kupujacy_bilety, int _idLotu)
         {
             try
@@ -377,6 +381,8 @@ namespace Bilety
                 return false;
             }
         }
+
+        //DO JACKA - pamiętaj o rzutowaniu w dół np "instancjaKlient as Osoba"
         public static void PokazKlientow<T>(List<T> lista) //wprowadz liste ktora chcesz wyswietlic
         {                                                  //Klientów, Firm lub Osób
             if (lista != null && lista.Count > 0)
@@ -403,7 +409,7 @@ namespace Bilety
             }
             return pasujace;
         }
-        private static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
+        public static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
         {
             if (CzyNumer(nr) && lista != null) //Sprawdzenie poprawności numeru i listy
             {
@@ -427,7 +433,7 @@ namespace Bilety
             }
             return false;
         }
-        private static Klient ZnajdzKonkretnegoKlienta<T>(string nr, List<T> lista)
+        public static Klient ZnajdzKonkretnegoKlienta<T>(string nr, List<T> lista)
         { //w przypadku Firmy nr -> nr_KRS, a Osoby nr -> nr_paszportu
             foreach(T item in lista)
             {
@@ -512,7 +518,7 @@ namespace Bilety
         
         //Osoby -------------
 
-        public static void DodajPasazera(string imie, string naziwsko, string nr_paszportu)
+        public static void DodajOsobe(string imie, string naziwsko, string nr_paszportu)
         {
             try  //Sprawdzenie unikalności numeru paszportu
             {
@@ -522,14 +528,14 @@ namespace Bilety
                         " systemie - wprowadz inny");
                 }
                 lista_pasazerow.Add(new Osoba(imie, naziwsko, nr_paszportu));
-                Console.WriteLine("Pomyslnie dodano pasazera do systemu");
+                Console.WriteLine("Pomyslnie dodano Osobe do systemu");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Nie udalo sie dodac pasazera:\n" + e.Message);
+                Console.WriteLine("Nie udalo sie dodac Osobe:\n" + e.Message);
             }
         }
-        public static void UsunPasazeraPoNumerze(string nr)
+        public static void UsunOsobePoNumerze(string nr)
         {
             try
             {
@@ -539,16 +545,16 @@ namespace Bilety
                     {
                         lista_pasazerow.Remove(item);
                     }
-                    Console.WriteLine("Pomyslnie usunieto pasazera z systemu");
+                    Console.WriteLine("Pomyslnie usunieto Osobe z systemu");
                 }
                 else
                 {
-                    Console.WriteLine("Brak pasazera o podanym numerze");
+                    Console.WriteLine("Brak Osobe o podanym numerze");
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine("Nie udalo sie usunac pasazera");
+                Console.WriteLine("Nie udalo sie usunac Osobe");
             }
         }
 
@@ -831,7 +837,7 @@ namespace Bilety
                 PokazLoty(i);
             }
         }
-        private static Lot ZnajdzLotPoID(int _idLotu)
+        public static Lot ZnajdzLotPoID(int _idLotu)
         {
             Lot dany_lot = null;
             foreach (Trasa T in lista_tras)
