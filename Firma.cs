@@ -14,10 +14,13 @@ namespace Bilety
 
         public Firma(string KRS, string nazwa_firmy)
         {
-            BiletSystem.CzyNumer(KRS); //Sprawdzenie poprawności numeru KRS
-            nr_KRS = KRS;
-            nazwa = nazwa_firmy;
-            lista_klientow = new List<Osoba>();
+            if (BiletSystem.CzyNumer(KRS)) //Sprawdzenie poprawności numeru KRS
+            {
+                nr_KRS = KRS;
+                nazwa = nazwa_firmy;
+                lista_klientow = new List<Osoba>();
+            }
+            else throw new NiepoprawnaInformacjaException("Numer KRS musi sie skladac jedynie z cyfr");
         }
         ~Firma()
         {
@@ -45,9 +48,24 @@ namespace Bilety
             if (nr_KRS.Equals(nr)) return true;
             else return false;
         }
+        public bool CzyTaSamaNazwaFirmy(string nr)
+        {
+            if (nazwa.Equals(nr)) return true;
+            else return false;
+        }
         public override string ToString()
         {
             return nazwa;
+        }
+        public static bool operator == (Firma a, Firma b)
+        {
+            if (a.nr_KRS == b.nr_KRS || a.nazwa == b.nazwa) return true;
+            else return false;
+        }
+        public static bool operator !=(Firma a, Firma b)
+        {
+            if (a.nr_KRS != b.nr_KRS && a.nazwa != b.nazwa) return true;
+            else return false;
         }
     }
 }
