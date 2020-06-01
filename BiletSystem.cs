@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Bilety
 {
@@ -41,13 +44,160 @@ namespace Bilety
             lista_lotnisk = new List<Lotnisko>();
             IdentyfikatorLotow = 0;
         }
-        public static void ZapiszStan()
+        public static void ZapiszStan(string Osobyfilepath)
         {
-            throw new System.NotImplementedException();
+            List<string> lines = File.ReadAllLines(Osobyfilepath).ToList();
         }
+
+        //Wczytywanie statu systemu --------------
+        
         public static void WczytajStan()
         {
-            throw new System.NotImplementedException();
+            WczytajOsoby(@"Osoby.txt");
+            WczytajFirmy(@"Firmy.txt");
+            WczytajLotniska(@"Lotniska.txt");
+            WczytajSamoloty(@"Samoloty.txt");
+            WczytajTrasyZLotami(@"Trasy_loty.txt");
+            WczytajBilety(@"Bilety.txt");
+        }
+        private static void WczytajOsoby(string nazwa_pliku)
+        {
+            if (File.Exists(nazwa_pliku))
+            {
+                List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+                foreach (string linia in linie)
+                {
+                    string[] slowa = linia.Split(',');
+                    DodajPasazera(slowa[0], slowa[1], slowa[2]);
+                }
+                Console.Clear();
+                Console.WriteLine("Pomyslnie wczytano osoby do systemu");
+            }
+            else
+            {
+                Console.WriteLine("Brak pliku zawierajacego liste osob do wczytania");
+            }
+        }
+        private static void WczytajFirmy(string nazwa_pliku)
+        {
+            if (File.Exists(nazwa_pliku))
+            {
+                List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+  
+                foreach (string linia in linie)
+                {
+                    string[] firma_paszporty = linia.Split(';');
+                    string[] firma = firma_paszporty[0].Split(',');
+                    string[] paszporty = firma_paszporty[1].Split(',');
+
+                    DodajFirme(firma[0],firma[1]);
+
+                    for (int i = 0; i < paszporty.Length; i++)
+                    {
+                        DodajKlientowFirmy(firma[0], paszporty[i]);
+                    }
+                }
+                Console.Clear();
+                Console.WriteLine("Pomyslnie wczytano firmy do systemu");
+            }
+            else
+            {
+                Console.WriteLine("Brak pliku zawierajacego liste firm do wczytania");
+            }
+        }
+        public static void WczytajLotniska(string nazwa_pliku)
+        {
+            if (File.Exists(nazwa_pliku))
+            {
+                List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+                foreach (string linia in linie)
+                {
+                    string[] slowa = linia.Split(',');
+                    DodajLotnisko(int.Parse(slowa[0]), int.Parse(slowa[1]), slowa[2], slowa[3]);
+                }
+                Console.Clear();
+                Console.WriteLine("Pomyslnie wczytano lotniska do systemu");
+            }
+            else
+            {
+                Console.WriteLine("Brak pliku zawierajacego liste lotnisk do wczytania");
+            }
+        }
+        public static void WczytajSamoloty(string nazwa_pliku)
+        {
+            if (File.Exists(nazwa_pliku))
+            {
+                List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+                foreach (string linia in linie)
+                {
+                    string[] slowa = linia.Split(',');
+                    for (int i = 0; i < slowa.Length/2; i++)
+                    {
+                        for (int j = 0; j < int.Parse(slowa[(i*2)+1]); j++)
+                        {
+                            DodajSamolot(slowa[i * 2]);
+                        }
+                    }
+                }
+                Console.Clear();
+                Console.WriteLine("Pomyslnie wczytano samoloty do systemu");
+            }
+            else
+            {
+                Console.WriteLine("Brak pliku zawierajacego liste samolotow do wczytania");
+            }
+        }
+        private static void WczytajTrasyZLotami(string nazwa_pliku)
+        {
+            if (File.Exists(nazwa_pliku))
+            {
+                List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+                short nr_lini = 0;
+                foreach (string linia in linie)
+                {
+                    nr_lini++;
+                    string[] slowa = linia.Split(';');
+                    string[] trasa = slowa[0].Split(',');
+                    string[] loty = slowa[1].Split('.'); 
+
+                    DodajTrase(int.Parse(trasa[0]), int.Parse(trasa[1]));
+
+                    for (int i = 0; i < loty.Length; i++)
+                    {
+                        string[] lot = loty[i].Split(',');
+
+                        DodajLotCyklicznie(int.Parse(lot[0]), int.Parse(lot[1]), nr_lini,
+                            int.Parse(lot[2]), int.Parse(lot[3]), int.Parse(lot[4]), int.Parse(lot[5]),
+                            int.Parse(lot[6]));
+                    }
+                }
+                Console.Clear();
+                Console.WriteLine("Pomyslnie wczytano trasy i loty do systemu");
+            }
+            else
+            {
+                Console.WriteLine("Brak pliku zawierajacego liste tras i lotow do wczytania");
+            }
+        }
+        private static void WczytajBilety(string nazwa_pliku)
+        {
+            if (File.Exists(nazwa_pliku))
+            {
+                List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
+                foreach (string linia in linie)
+                {
+                    string[] slowa = linia.Split(',');
+                    RezerwujBilet(ZnajdzKonkretnegoKlienta(slowa[0], GetKlienci),
+                        int.Parse(slowa[1]), 
+                        ZnajdzKonkretnegoKlienta(slowa[2],GetOsoby) as Osoba);
+                }
+                Console.Clear();
+                Console.WriteLine("Pomyslnie wczytano bilety do systemu");
+            }
+            else
+            {
+                Console.WriteLine("Brak pliku zawierajacego liste biletow do wczytania");
+            }
         }
 
         //Rezerwacja ------------
@@ -57,7 +207,7 @@ namespace Bilety
             try
             {
                 Lot dany_lot = ZnajdzLotPoID(_idLotu);
-                if(dany_lot.LiczbaMiejsc > 0)
+                if(dany_lot.LiczbaMiejsc < kupujacy_bilety.GetKlienci.Count())
                 {
                     foreach (Osoba item in kupujacy_bilety.GetKlienci)
                     {
@@ -499,7 +649,13 @@ namespace Bilety
 
         // Loty -----------------
 
-        public static void DodajLotNaTrasie(int nrTrasy, int dzien, int miesiac, int rok, int godzina, int minuta)
+        public static void DodajLotNaTrasie(
+            int nrTrasy,
+            int dzien,
+            int miesiac,
+            int rok,
+            int godzina,
+            int minuta)
         {
             try
             { //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo
@@ -526,7 +682,14 @@ namespace Bilety
             Console.WriteLine("\nPomyślnie utworzono lot " + 
                 lista_tras[nrTrasy-1].GetLoty[lista_tras[nrTrasy-1].GetLoty.Count-1].ToString());
         }
-        public static void DodajLotCyklicznie(int coIleDni, int ileLotow, int nrTrasy, int dzien, int miesiac, int rok, int godzina, int minuta)
+        public static void DodajLotCyklicznie(int coIleDni,
+                                              int ileLotow,
+                                              int nrTrasy,
+                                              int dzien,
+                                              int miesiac,
+                                              int rok,
+                                              int godzina,
+                                              int minuta)
         {
             try
             { //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo

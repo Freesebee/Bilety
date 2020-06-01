@@ -30,8 +30,15 @@ namespace Bilety
         }
         public void DodajKlienta(Osoba nowy_klient)
         {
-            if (!lista_klientow.Contains(nowy_klient)) 
+            if (!lista_klientow.Contains(nowy_klient))
+            {
                 lista_klientow.Add(nowy_klient);
+                Console.WriteLine("Pomyslnie dodano klienta firmy");
+            }
+            else
+            {
+                Console.WriteLine("Nie udalo sie dodac klienta");
+            }
         }
         public void UsunKlienta(Osoba dany_klient)
         {
@@ -56,7 +63,7 @@ namespace Bilety
         }
         public override string ToString()
         {
-            return nazwa;
+            return $"Numer KRS: {nr_KRS} {nazwa}";
         }
         public static bool operator == (Firma a, Firma b)
         {

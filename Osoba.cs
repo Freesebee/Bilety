@@ -75,7 +75,7 @@ namespace Bilety
         }
         public override string ToString()
         {
-            return $"{nazwisko} {imie}";
+            return $"Numer paszportu:{nr_paszportu} - {nazwisko} {imie}";
         }
         public static bool operator == (Osoba a, Osoba b)
         {
