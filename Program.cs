@@ -8,6 +8,9 @@ namespace Bilety
     {
         static void Main()
         {
+            BiletSystem.DodajLotnisko(1,2,"asd","asd");
+            BiletSystem.UsunLotnisko(1);
+            Console.ReadKey();
         }
     }
 }

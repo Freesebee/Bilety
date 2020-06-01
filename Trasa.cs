@@ -7,46 +7,45 @@ namespace Bilety
 {
     public class Trasa
     {
+        
         public Lotnisko Lotnisko_przylotu { get; private set; }
         public Lotnisko Lotnisko_wylotu { get; private set; }
         public double Odleglosc { get; private set; }
-        public double CzasLotu { get; private set; }
         private List<Lot> lista_lotow;
+
         public List<Lot> GetLoty { get => lista_lotow; }
 
         public Trasa(Lotnisko wylot, Lotnisko przylot)
         {
             Lotnisko_wylotu = wylot;
             Lotnisko_przylotu = przylot;
-            Odleglosc = LiczOdleglosc();
-            CzasLotu = CzasLotuNaTrasie(Odleglosc);
+            Odleglosc = BiletSystem.LiczOdleglosc(wylot, przylot);
             lista_lotow = new List<Lot>();
-            Console.WriteLine($"Utworzono trasę {przylot.Miasto} -> {wylot.Miasto}");
-        }
-        public double LiczOdleglosc()
+            Console.WriteLine($"Utworzono trasę {wylot.Miasto} -> {przylot.Miasto}");
+        }    
+        
+        public override string ToString()
         {
-            double droga;
-            Lotnisko L1 = Lotnisko_wylotu, L2 = Lotnisko_przylotu;
-            int x1 = L1.X, y1 = L1.Y, x2 = L2.X, y2 = L2.Y;
-            droga = Math.Round(Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2)), 2);
-            return droga * 100; //jedna kratka w układzie współrzędnych odpowiada 100km
+            return Lotnisko_wylotu.Miasto + " -> " + Lotnisko_przylotu.Miasto;
         }
-        public double CzasLotuNaTrasie(double droga)
+        public void DodajLot(DateTime data, int id)
         {
-            double predkosc = 800; //km na godzine
-            double czas = Math.Round((droga / predkosc), 2); //czas w godzinach, z resztą dziesiętną
-            return czas;
+            if (Odleglosc>5000)
+            {
+                Console.WriteLine($"Zbyt duza odleglosc {Odleglosc}km!\nNasze samoloty latają najdalej 5000km");
+                return;
+            }
+            lista_lotow.Add(new Lot(Lotnisko_wylotu, Lotnisko_przylotu, data, id));
         }
-        public string CzasToString() //zwraca godzinę w formacie 5h 46m
+        public void PokazLoty()
         {
-            double godzina, minuta;
-            godzina = Math.Floor(CzasLotu);
-            minuta = Math.Floor((CzasLotu - godzina) * 60);
-            return $"{godzina}h {minuta}m";
-        }
-        public List<Lot> GetListaLotowNaTrasie()
-        {
-            return lista_lotow;
+            if(lista_lotow.Count != 0)
+            {
+                foreach(Lot oLot in lista_lotow)
+                {
+                    Console.WriteLine(oLot.ToString());
+                }
+            } else Console.WriteLine("Brak lotow do wyswietlenia.");
         }
     }
 }

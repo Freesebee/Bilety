@@ -15,23 +15,6 @@ namespace Bilety
         //Tworzy obiekt Lotnisko i automatycznie dodaje je na lista_lotnisk w BiletSystem
         public Lotnisko(int _x, int _y, string _kraj, string _miasto)
         {
-            //Sprawdza, czy lotnisko o podanych współrzędnych jest już na liście:
-            foreach (Lotnisko oLotnisko in BiletSystem.GetLotniska)
-            {
-                try
-                {
-                    if (_x == oLotnisko.X && _y == oLotnisko.Y)
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Lotnisko o współrzędnych " +
-                            $"({_x},{_y}) już istnieje.");
-                    return; //jeśli lotnisko jest już na liście, przerywa konstruktor
-                }
-            }
             X = _x;
             Y = _y;
             Kraj = _kraj;
