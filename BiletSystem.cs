@@ -150,7 +150,7 @@ namespace Bilety
                 foreach (string linia in linie)
                 {
                     string[] slowa = linia.Split(',');
-                    DodajPasazera(slowa[0], slowa[1], slowa[2]);
+                    DodajOsobe(slowa[0], slowa[1], slowa[2]);
                 }
                 //Console.Clear();
                 Console.WriteLine("Pomyslnie wczytano osoby do systemu");
@@ -518,7 +518,7 @@ namespace Bilety
         
         //Osoby -------------
 
-        public static void DodajPasazera(string imie, string naziwsko, string nr_paszportu)
+        public static void DodajOsobe(string imie, string naziwsko, string nr_paszportu)
         {
             try  //Sprawdzenie unikalności numeru paszportu
             {
@@ -528,14 +528,14 @@ namespace Bilety
                         " systemie - wprowadz inny");
                 }
                 lista_pasazerow.Add(new Osoba(imie, naziwsko, nr_paszportu));
-                Console.WriteLine("Pomyslnie dodano pasazera do systemu");
+                Console.WriteLine("Pomyslnie dodano Osobe do systemu");
             }
             catch (Exception e)
             {
-                Console.WriteLine("Nie udalo sie dodac pasazera:\n" + e.Message);
+                Console.WriteLine("Nie udalo sie dodac Osobe:\n" + e.Message);
             }
         }
-        public static void UsunPasazeraPoNumerze(string nr)
+        public static void UsunOsobePoNumerze(string nr)
         {
             try
             {
@@ -545,16 +545,16 @@ namespace Bilety
                     {
                         lista_pasazerow.Remove(item);
                     }
-                    Console.WriteLine("Pomyslnie usunieto pasazera z systemu");
+                    Console.WriteLine("Pomyslnie usunieto Osobe z systemu");
                 }
                 else
                 {
-                    Console.WriteLine("Brak pasazera o podanym numerze");
+                    Console.WriteLine("Brak Osobe o podanym numerze");
                 }
             }
             catch (Exception)
             {
-                Console.WriteLine("Nie udalo sie usunac pasazera");
+                Console.WriteLine("Nie udalo sie usunac Osobe");
             }
         }
 
