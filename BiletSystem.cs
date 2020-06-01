@@ -5,6 +5,7 @@ namespace Bilety
 {
     public static class BiletSystem
     {
+        public static int IdentyfikatorLotow {get ; private set; }
         private static List<Samolot> dostepne_samoloty;
         private static List<Osoba> lista_pasazerow;
         private static List<Trasa> lista_tras;
@@ -37,55 +38,12 @@ namespace Bilety
             dostepne_samoloty = new List<Samolot>();
             lista_pasazerow = new List<Osoba>();
             lista_firm = new List<Firma>();
+            lista_lotnisk = new List<Lotnisko>();
+            IdentyfikatorLotow = 0;
         }
 
-        public static void DodajLotnisko(int x, int y, string kraj, string miasto)
-        {
-            lista_lotnisk.Add(new Lotnisko(x,y,kraj,miasto));
-        }
-        public static void UsunLotnisko(int x, int y)
-        {
-            Lotnisko dane_lotnisko = lista_lotnisk.Find(oElement => oElement.X == x && oElement.Y == y);
-            if (dane_lotnisko != null) //czy lotnisko zostało znalezione na liście
-            {
-                Trasa uzywana_trasa = lista_tras.Find(lTrasy => lTrasy.Lotnisko_wylotu == dane_lotnisko || lTrasy.Lotnisko_przylotu == dane_lotnisko);
-                if (uzywana_trasa != null) //czy lotnisko jest używane na trasie
-                {
-                    Console.WriteLine($"\nBłąd > Lotnisko o współżędnych ({x},{y})" +
-                        " jest używane na trasie i nie może zostać usunięte.");
-                }
-                else //lotnisko jest na liście i nie jest używane na trasie
-                {
-                    //List<T>.Remove() zwraca 1, jeśli pomyślnie usunie element, w przeciwnym wypadku zwraca 0
-                    if (lista_lotnisk.Remove(dane_lotnisko))
-                        Console.WriteLine("\nUsunięto lotnisko" + dane_lotnisko.ToString());
-                    else Console.WriteLine("\nBłąd > nie usunięto lotniska.");
-                }
-            } //lotnisko nie zostało znalezione na liście
-            else Console.WriteLine($"\nBłąd > Lotnisko o współżędnych ({x},{y}) nie istnieje.");
-        }
-        public static void PokazLotniska()
-        {
-            if (lista_lotnisk.Count != 0)
-            {
-                Console.WriteLine("\nDostępne lotniska:");
-                foreach (Lotnisko oLotnisko in lista_lotnisk)
-                {
-                    Console.WriteLine(oLotnisko.ToString());
-                }
-            }
-            else Console.WriteLine("Brak lotnisk do wyświetlenia.");
-        }
-        public static void DodajLot(Trasa trasa, DateTime czas_wylot)
-        {
-            trasa.GetLoty.Add(new Lot(czas_wylot));
-        }
-        public static void UsunLot(Lot lot)
-        {
-            //Powinno również usuwać bilety
-            //z listy biletów danego lotu
-            throw new NotImplementedException();
-        }
+
+        
         public static void ZapiszStan()
         {
             throw new System.NotImplementedException();
@@ -94,16 +52,24 @@ namespace Bilety
         {
             throw new System.NotImplementedException();
         }
-        public static void DodajTrase(Lotnisko wylot, Lotnisko przylot)
+        
+        public static void RezerwujBilet(Klient kupujacy_bilet, int _idLotu, Osoba pasazer)
         {
-            lista_tras.Add(new Trasa(wylot, przylot));
-        }
-        public static void UsunTrase()
-        {
-            throw new System.NotImplementedException();
-        }
-        public static void RezerwujBilet(Klient kupujacy_bilet, Lot dany_lot, Osoba pasazer)
-        {
+            //aby zarezerwowac bilet na dany lot, nalezy podac ID lotu. -Filip
+            Lot dany_lot=null;
+            try
+            {
+                foreach (Trasa T in lista_tras)
+                {
+                    dany_lot = T.GetLoty.Find(oLot => oLot.IdLotu == _idLotu);
+                }
+                if (dany_lot == null) throw new NiepoprawnyNumerException("Niepoprawny ID Lotu");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nie udalo sie zarezerwowac biletu");
+                return;
+            }
             try
             {
                 foreach (Bilet bilet in dany_lot.GetBilety)
@@ -115,6 +81,7 @@ namespace Bilety
                 }
                 Bilet B = new Bilet(pasazer, dany_lot, kupujacy_bilet);
                 dany_lot.GetBilety.Add(B);
+                dany_lot.ZarezerwujMiejsce(); //pomniejsza liczbę miejsc w samolocie o 1
                 pasazer.PrzekazBilet(B);
                 Console.WriteLine("Pomyslnie zarezerwowano bilet");
             }
@@ -238,13 +205,281 @@ namespace Bilety
             }
             return pasujace;
         }
-        public static void DodajSamolot()
+        
+
+        // Samoloty --------------
+
+        public static Samolot DodajSamolot(string rodzaj)
         {
-            throw new System.NotImplementedException();
+            if (rodzaj == "boeing" || rodzaj == "Boeing")
+            {
+                dostepne_samoloty.Add(new Boeing());
+                //Console.WriteLine("\nUtworzono: " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
+                return dostepne_samoloty[dostepne_samoloty.Count-1];
+            } else if (rodzaj == "airbus" || rodzaj == "Airbus")
+            {
+                dostepne_samoloty.Add(new Airbus());
+                //Console.WriteLine("\nUtworzono: " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
+                return dostepne_samoloty[dostepne_samoloty.Count-1];
+            } else if (rodzaj == "bombardier" || rodzaj == "Bombardier")
+            {
+                dostepne_samoloty.Add(new Bombardier());
+                //Console.WriteLine("\nUtworzono: " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
+                return dostepne_samoloty[dostepne_samoloty.Count-1];
+            } else 
+            {
+                Console.WriteLine("\nPodano złą nazwę samolotu.");
+                return null;
+            }
         }
-        public static void UsunSamolot()
+        public static void UsunSamolot(int nrSamolotu)//Trzeba podać numer samolotu, wyświetlony przez PokazSamoloty()
         {
-            throw new System.NotImplementedException();
+            int max = dostepne_samoloty.Count;
+            if (max < 1) {Console.WriteLine("\nBłąd > Brak samolotow do usunięcia."); return;}
+            if (nrSamolotu < 1 || nrSamolotu > max) {Console.WriteLine($"Błąd > Niepoprawny numer samolotu. ({nrSamolotu})"); return;}
+            Console.WriteLine("\nPomyślnie usunięto samolot" + dostepne_samoloty[nrSamolotu-1].ToString());
+            dostepne_samoloty.Remove(dostepne_samoloty[nrSamolotu-1]);
+            //usuwa samolot, bez sprawdzania, czy można go usunąć, przez brak czasu
         }
+        public static void PokazSamoloty()
+        {
+            int i=1;
+            if (dostepne_samoloty.Count != 0)
+            {
+                Console.WriteLine("\nDostępne samoloty:");
+                foreach (Samolot oSamolot in dostepne_samoloty)
+                {
+                    Console.WriteLine($"\n{i++}. " + oSamolot.ToString());
+                }
+            }
+            else Console.WriteLine("Brak samolotów do wyświetlenia.");
+        }
+
+        // Lotniska --------------
+
+        public static void DodajLotnisko(int x, int y, string kraj, string miasto)
+        {
+            //Sprawdza, czy lotnisko o podanych współrzędnych jest już na liście:
+            foreach (Lotnisko oLotnisko in lista_lotnisk)
+            {
+                try
+                {
+                    if (x == oLotnisko.X && y == oLotnisko.Y)
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Lotnisko o współrzędnych " +
+                            $"({x},{y}) już istnieje.");
+                    return; //jeśli lotnisko jest już na liście, przerywa metodę
+                }
+            }
+            lista_lotnisk.Add(new Lotnisko(x,y,kraj,miasto));
+        }
+        public static void UsunLotnisko(int nrLotniska)
+        {
+            if (lista_lotnisk.Count > 0 || lista_lotnisk.Count >= nrLotniska || nrLotniska > 0)
+            {
+                Trasa uzywana_trasa = lista_tras.Find(lTrasy => lTrasy.Lotnisko_wylotu == lista_lotnisk[nrLotniska-1]
+                                      || lTrasy.Lotnisko_przylotu == lista_lotnisk[nrLotniska-1]);
+                if (uzywana_trasa != null) //czy lotnisko jest używane na trasie
+                {
+                    Console.WriteLine($"\nBłąd > Lotnisko o ID ({nrLotniska})" +
+                        " jest używane na trasie i nie może zostać usunięte.");
+                    return;
+                }
+                else //lotnisko jest na liście i nie jest używane na trasie
+                {
+                    //List<T>.Remove() zwraca 1, jeśli pomyślnie usunie element, w przeciwnym wypadku zwraca 0
+                    if (lista_lotnisk.Remove(lista_lotnisk[nrLotniska-1]))
+                        Console.WriteLine("\nUsunięto lotnisko");
+                    else Console.WriteLine("\nBłąd > nie usunięto lotniska.");
+                }
+            }
+            else Console.WriteLine($"\nBłąd > Zły numer lotniska.");
+        }
+        public static void PokazLotniska()
+        {
+            int i=1;
+            if (lista_lotnisk.Count != 0)
+            {
+                Console.WriteLine("\nDostępne lotniska:");
+                foreach (Lotnisko oLotnisko in lista_lotnisk)
+                {
+                    Console.WriteLine($"\n{i++}. " + oLotnisko.ToString());
+                }
+            }
+            else Console.WriteLine("Brak lotnisk do wyświetlenia.");
+        }
+
+        // Trasy -----------------
+        
+        public static void DodajTrase(int nrW, int nrP)//Nalezy podać numery lotnisk (wyświetlone przez PokazLotniska()
+        {
+            int max = lista_lotnisk.Count;
+            // Kolejne ify sprawdzają poprawność wprowadzonych numerów
+            if (nrW == nrP) {Console.WriteLine("Błąd > Proszę podać dwa różne lotniska!"); return;}
+            if (max < 2)
+            {
+                Console.WriteLine("Błąd > Brak wystarczającej liczby lotnisk!");
+                return;
+            }
+            if (nrW <= 0 || nrP <= 0 )
+            {
+                Console.WriteLine("Błąd > Obie liczby muszą być większe niż 0!");
+                return;
+            }
+            if (nrW > max || nrP > max )
+            {
+                Console.WriteLine($"Błąd > Nie ma lotniska o tak dużym numerze! Max {max}");
+                return;
+            }
+            Lotnisko wylot, przylot;
+            wylot = lista_lotnisk[--nrW];
+            przylot = lista_lotnisk[--nrP];
+
+            foreach(Trasa oTrasa in lista_tras) //Sprawdza, czy trasa już istnieje
+            {
+                if (wylot == oTrasa.Lotnisko_wylotu && przylot == oTrasa.Lotnisko_przylotu)
+                {
+                    Console.WriteLine("Błąd > Trasa |" + oTrasa.ToString() + "| już istnieje!");
+                    return;
+                }
+            }
+            lista_tras.Add(new Trasa(wylot, przylot));
+        }
+        public static void UsunTrase(int nrTrasy)
+        {
+            int max = lista_tras.Count;
+            if (max < 1) {Console.WriteLine("\nBłąd > Brak tras do usunięcia."); return;}
+            if (nrTrasy < 1 || nrTrasy > max) {Console.WriteLine($"\nBłąd > Niepoprawny numer trasy. ({nrTrasy})"); return;}
+            nrTrasy--;
+            if (lista_tras[nrTrasy].GetLoty.Count != 0)
+            {
+                Console.WriteLine("\nBłąd > Nie można usunąć trasy |" + lista_tras[nrTrasy].ToString() +
+                    "| ponieważ są do niej przypisane loty!");
+                return;
+            }
+            Console.WriteLine("\nPomyślnie usunięto trasę |" + lista_tras[nrTrasy].ToString() + "|.");
+            lista_tras.Remove(lista_tras[nrTrasy]);
+        }
+        public static void PokazTrasy()
+        {
+            int i=1;
+            if (lista_tras.Count != 0)
+            {
+                Console.WriteLine("\nDostępne trasy:");
+                foreach (Trasa oTrasa in lista_tras)
+                {
+                    Console.WriteLine($"{i++}. " + oTrasa.ToString());
+                }
+            }
+            else Console.WriteLine("Brak tras do wyświetlenia.");
+        }
+
+        // Loty -----------------
+        public static void DodajLotNaTrasie(int nrTrasy, int dzien, int miesiac, int rok, int godzina, int minuta)
+        {
+            try
+            { //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo
+                if(dzien > 30 || miesiac > 12 || godzina > 23 || minuta > 59
+                    || dzien <= 0 || miesiac <= 0 || godzina < 0 || minuta < 0) 
+                {
+                    throw new NiepoprawnyNumerException("Zła data.");
+                } else if (dzien > 28 && miesiac == 2)
+                {
+                    throw new NiepoprawnyNumerException("Zła data.");
+                }
+                if(nrTrasy <= 0 || nrTrasy > lista_tras.Count)
+                {
+                    throw new NiepoprawnyNumerException("Zły numer Trasy.");
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Podano niepoprawne dane.");
+                return;
+            }
+
+            lista_tras[nrTrasy-1].DodajLot(new DateTime(rok, miesiac, dzien, godzina, minuta, 0), ++IdentyfikatorLotow);
+            Console.WriteLine("\nPomyślnie utworzono lot " + 
+                lista_tras[nrTrasy-1].GetLoty[lista_tras[nrTrasy-1].GetLoty.Count-1].ToString());
+        }
+        public static void DodajLotCyklicznie(int coIleDni, int ileLotow, int nrTrasy, int dzien, int miesiac, int rok, int godzina, int minuta)
+        {
+            try
+            { //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo
+                if(dzien > 30 || miesiac > 12 || godzina > 23 || minuta > 59
+                    || dzien <= 0 || miesiac <= 0 || godzina < 0 || minuta < 0) 
+                {
+                    throw new NiepoprawnyNumerException("Zła data.");
+                } else if (dzien > 28 && miesiac == 2)
+                {
+                    throw new NiepoprawnyNumerException("Zła data.");
+                }
+                if(nrTrasy <= 0 || nrTrasy > lista_tras.Count)
+                {
+                    throw new NiepoprawnyNumerException("Zły numer Trasy.");
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Podano niepoprawne dane.");
+                return;
+            }
+
+            
+            TimeSpan cykl = new TimeSpan(coIleDni, 0, 0, 0); 
+            DateTime DataPierwszegoLotu = (new DateTime(rok, miesiac, dzien, godzina, minuta, 0)) - cykl;
+            for (int i = 0; i < ileLotow; i++)
+            {
+                lista_tras[nrTrasy-1].DodajLot(DataPierwszegoLotu += cykl, ++IdentyfikatorLotow);
+                Console.WriteLine("\nPomyślnie utworzono lot " 
+                    + lista_tras[nrTrasy-1].GetLoty[lista_tras[nrTrasy-1].GetLoty.Count-1].ToString());
+            }
+        }
+        public static void UsunLot(int _idLotu)
+        {
+            Lot dany_lot = null;
+            foreach (Trasa T in lista_tras)
+            {
+                dany_lot = T.GetLoty.Find(oLot => oLot.IdLotu == _idLotu);
+                if (dany_lot != null && dany_lot.GetBilety.Count > 0)
+                {                    
+                    dany_lot.GetBilety.Clear();
+                }
+                if(T.GetLoty.Remove(dany_lot))
+                {
+                    Console.WriteLine("Pomyślnie usunięto lot");
+                }
+            }
+            if (dany_lot == null)
+            {
+                Console.WriteLine("Coś poszło nie tak przy usuwaniu.");
+            }
+        }
+        public static void PokazLoty(int nrTrasy)//na trasie (brakuje sprawdzania wyjatkow)
+        {
+            Console.WriteLine("\nLoty na trasie |" + lista_tras[nrTrasy-1].ToString() + $"| ({lista_tras[nrTrasy-1].GetLoty.Count}):");
+            lista_tras[nrTrasy-1].PokazLoty();
+        }
+        public static void PokazLoty()//pokazuje wszystkie loty w ogóle
+        {
+            for (int i = 1; i <= lista_tras.Count; i++)
+            {
+                PokazLoty(i);
+            }
+        }
+
+        public static double LiczOdleglosc(Lotnisko L1, Lotnisko L2)
+        {
+            double droga;
+            int x1 = L1.X, y1 = L1.Y, x2 = L2.X, y2 = L2.Y;
+            droga = Math.Round(Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2)), 2);
+            return droga * 100; //jedna kratka w układzie współrzędnych odpowiada 100km
+        }
+        
     }
 }

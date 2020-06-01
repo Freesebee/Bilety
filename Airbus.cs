@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Bilety
 {
+    /*
     public class Airbus : Samolot
     {
         public Airbus() : base(1200, 100) { }
@@ -13,4 +14,5 @@ namespace Bilety
             return "Airbus";
         }
     }
+    */
 }
