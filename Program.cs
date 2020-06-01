@@ -8,11 +8,9 @@ namespace Bilety
     {
         static void Main()
         {
-            BiletSystem.WczytajStan("");
+            //BiletSystem.WczytajStan("");
 
-            BiletSystem.PokazLoty();
-
-            BiletSystem.ZapiszStan("");
+            //BiletSystem.ZapiszStan("");
         }
     }
 }

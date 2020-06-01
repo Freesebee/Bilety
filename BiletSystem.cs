@@ -50,7 +50,7 @@ namespace Bilety
         //Zapisywanie stanu systemu --------------
 
         public static void ZapiszStan(string file_path)
-        {//Do Jacka: używaj ZapiszStan(""); 
+        {//DO JACKA: używaj ZapiszStan(""); 
          //wtedy pliki zapisze w folderze bin/Debug projektu
             ZapiszOsoby($@"{file_path}Osoby.txt");
             ZapiszSamoloty($@"{file_path}Samoloty.txt");
@@ -58,6 +58,8 @@ namespace Bilety
             ZapiszLotniska($@"{file_path}Lotniska.txt");
             ZapiszTrasyZLotami($@"{file_path}Trasy_loty.txt");
             ZapiszBilety($@"{file_path}Bilety.txt");
+            Console.WriteLine("Zapisano aktualny stan systemu");
+            //Console.Clear(); <======== ODKOMENTUJ ABY CZYŚCIŁO KONSOLĘ
         }
         private static void ZapiszOsoby(string nazwa_pliku)
         {
@@ -137,6 +139,8 @@ namespace Bilety
             WczytajSamoloty(@"Samoloty.txt");
             WczytajTrasyZLotami(@"Trasy_loty.txt");
             WczytajBilety(@"Bilety.txt");
+            Console.WriteLine();
+            //Console.Clear(); <======== ODKOMENTUJ ABY CZYŚCIŁO KONSOLĘ
         }
         private static void WczytajOsoby(string nazwa_pliku)
         {
@@ -278,7 +282,7 @@ namespace Bilety
         }
 
         //Rezerwacja ------------
-
+        //DO JACKA - gdy bedziesz chcial wczytac z klawiatury liczby to uzywaj "int.Parse(twoj_string)"
         public static void RezerwujBiletyGrupie(Firma kupujacy_bilety, int _idLotu)
         {
             try
@@ -377,6 +381,8 @@ namespace Bilety
                 return false;
             }
         }
+
+        //DO JACKA - pamiętaj o rzutowaniu w dół np "instancjaKlient as Osoba"
         public static void PokazKlientow<T>(List<T> lista) //wprowadz liste ktora chcesz wyswietlic
         {                                                  //Klientów, Firm lub Osób
             if (lista != null && lista.Count > 0)
@@ -403,7 +409,7 @@ namespace Bilety
             }
             return pasujace;
         }
-        private static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
+        public static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
         {
             if (CzyNumer(nr) && lista != null) //Sprawdzenie poprawności numeru i listy
             {
@@ -427,7 +433,7 @@ namespace Bilety
             }
             return false;
         }
-        private static Klient ZnajdzKonkretnegoKlienta<T>(string nr, List<T> lista)
+        public static Klient ZnajdzKonkretnegoKlienta<T>(string nr, List<T> lista)
         { //w przypadku Firmy nr -> nr_KRS, a Osoby nr -> nr_paszportu
             foreach(T item in lista)
             {
@@ -831,7 +837,7 @@ namespace Bilety
                 PokazLoty(i);
             }
         }
-        private static Lot ZnajdzLotPoID(int _idLotu)
+        public static Lot ZnajdzLotPoID(int _idLotu)
         {
             Lot dany_lot = null;
             foreach (Trasa T in lista_tras)
