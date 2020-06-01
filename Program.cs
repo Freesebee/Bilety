@@ -8,6 +8,8 @@ namespace Bilety
     {
         static void Main()
         {
+
+
             int Switch = 12, Switch1 = 12;
             int nrTrasy, _nrSamolotu ;
             string _file_path, _rodzaj;
