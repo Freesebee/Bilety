@@ -11,6 +11,7 @@ namespace Bilety
         private string nr_KRS;
         private string nazwa;
         private List<Osoba> lista_klientow;
+        public List<Osoba> GetKlienci { get => lista_klientow; }
 
         public Firma(string KRS, string nazwa_firmy)
         {

@@ -61,7 +61,15 @@ namespace Bilety
 
         public void ZarezerwujMiejsce()
         {
-            LiczbaMiejsc--;
+            if(LiczbaMiejsc > 0)
+            {
+                LiczbaMiejsc--;
+            }
+            else
+            {
+                throw new NiepoprawnaInformacjaException("Brak miejsc na podany lot");
+            }
+           
         }
 
         public TimeSpan LiczCzasLotu(double droga)

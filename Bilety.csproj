@@ -43,11 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Airbus.cs" />
     <Compile Include="Bilet.cs" />
     <Compile Include="BiletSystem.cs" />
-    <Compile Include="Boeing.cs" />
-    <Compile Include="Bombardier.cs" />
     <Compile Include="Firma.cs" />
     <Compile Include="Klient.cs" />
     <Compile Include="Osoba.cs" />

@@ -49,47 +49,66 @@ namespace Bilety
         {
             throw new System.NotImplementedException();
         }
-        
+
+        //Rezerwacja ------------
+
+        public static void RezerwujBiletyGrupie(Firma kupujacy_bilety, int _idLotu)
+        {
+            try
+            {
+                Lot dany_lot = ZnajdzLotPoID(_idLotu);
+                if(dany_lot.LiczbaMiejsc > 0)
+                {
+                    foreach (Osoba item in kupujacy_bilety.GetKlienci)
+                    {
+                        RezerwujBilet(kupujacy_bilety, _idLotu, item);
+                    }
+                }
+                else
+                {
+                    throw new NiepoprawnaInformacjaException("Brak miejsc na podany lot");
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Nie udalo sie zarezerwowac grupie biletow:\n" + e.Message);
+            }
+           
+        }
         public static void RezerwujBilet(Klient kupujacy_bilet, int _idLotu, Osoba pasazer)
         {
             //aby zarezerwowac bilet na dany lot, nalezy podac ID lotu. -Filip
-            Lot dany_lot=null;
             try
             {
-                foreach (Trasa T in lista_tras)
+                Lot dany_lot = ZnajdzLotPoID(_idLotu);
+                if (dany_lot.LiczbaMiejsc > 0)
                 {
-                    dany_lot = T.GetLoty.Find(oLot => oLot.IdLotu == _idLotu);
-                }
-                if (dany_lot == null) throw new NiepoprawnyNumerException("Niepoprawny ID Lotu");
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Nie udalo sie zarezerwowac biletu");
-                return;
-            }
-            try
-            {
-                foreach (Bilet bilet in dany_lot.GetBilety)
-                {
-                    if (pasazer.CzyPosiadaTakiBilet(bilet))
+                    foreach (Bilet bilet in dany_lot.GetBilety)
                     {
-                        throw new NiepoprawnaInformacjaException("Pasazer juz posiada taki bilet");
+                        if (pasazer.CzyPosiadaTakiBilet(bilet))
+                        {
+                            throw new NiepoprawnaInformacjaException("Pasazer juz posiada taki bilet");
+                        }
                     }
+                    Bilet B = new Bilet(pasazer, dany_lot, kupujacy_bilet);
+                    dany_lot.GetBilety.Add(B);
+                    dany_lot.ZarezerwujMiejsce(); //pomniejsza liczbę miejsc w samolocie o 1
+                    pasazer.PrzekazBilet(B);
+                    Console.WriteLine("Pomyslnie zarezerwowano bilet");
                 }
-                Bilet B = new Bilet(pasazer, dany_lot, kupujacy_bilet);
-                dany_lot.GetBilety.Add(B);
-                dany_lot.ZarezerwujMiejsce(); //pomniejsza liczbę miejsc w samolocie o 1
-                pasazer.PrzekazBilet(B);
-                Console.WriteLine("Pomyslnie zarezerwowano bilet");
+                else throw new NiepoprawnaInformacjaException("Brak miejsc na podany lot");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Nie udalo sie zarezerwowac biletu:\n" + e.Message);
             }
         }
+
+        //Klienci (dla Firm i Osób) ----------
+
         public static bool CzyTekst(string text)
         {
-            
+
             try
             {
                 if (text != "")
@@ -112,7 +131,7 @@ namespace Bilety
         {
             try
             {
-                if(nr!="")
+                if (nr != "")
                 {
                     foreach (char c in nr)
                     {
@@ -131,20 +150,35 @@ namespace Bilety
                 return false;
             }
         }
-        public static bool CzyWystepujeNazwaFirmy(string nazwa)
-        {
-            foreach (Firma item in GetFirmy)
+        public static void PokazKlientow<T>(List<T> lista) //wprowadz liste ktora chcesz wyswietlic
+        {                                                  //Klientów, Firm lub Osób
+            if (lista != null && lista.Count > 0)
             {
-                if (item.CzyTaSamaNazwaFirmy(nazwa))
+                foreach (T item in lista)
                 {
-                    return true;
+                    Console.WriteLine(item);
                 }
             }
-            return false;
+            else
+            {
+                Console.WriteLine("Brak podmiotow do wyswietlenia");
+            }
+        }
+        public static List<Klient> ZnajdzPasujacePoTekscie<T>(string tekst, List<T> lista)
+        {
+            List<Klient> pasujace = new List<Klient>();
+            foreach (T item in lista)
+            {
+                if ((item as Klient).CzyZawieraZnaki(tekst))
+                {
+                    pasujace.Add(item as Klient);
+                }
+            }
+            return pasujace;
         }
         private static bool CzyWystepujeNrKlienta<T>(string nr, List<T> lista)
         {
-            if(CzyNumer(nr) && lista!=null) //Sprawdzenie poprawności numeru i listy
+            if (CzyNumer(nr) && lista != null) //Sprawdzenie poprawności numeru i listy
             {
                 foreach (T item in lista) //Sprawdzenie unikalności numeru w systemie
                 {
@@ -166,6 +200,91 @@ namespace Bilety
             }
             return false;
         }
+        private static Klient ZnajdzKonkretnegoKlienta<T>(string nr, List<T> lista)
+        { //w przypadku Firmy nr -> nr_KRS, a Osoby nr -> nr_paszportu
+            foreach(T item in lista)
+            {
+                if(((item is Firma) && (item as Firma).CzyTenSamUnikalnyNr(nr))
+                    || ((item is Osoba) && (item as Osoba).CzyTenSamUnikalnyNr(nr)))
+                {
+                    return item as Klient;
+                } 
+            }
+            return null;
+        }
+
+        //Firmy -------------
+
+        public static void DodajFirme(string nrKRS, string nazwa)
+        {
+            try //Sprawdzenie unikalności numeru KRS i nazwy
+            {
+                if (CzyWystepujeNrKlienta(nrKRS, lista_firm))
+                {
+                    throw new DuplikatNumeruException("Podany numer KRS wystepuje w systemie, wprowadz inny");
+                }
+                if (CzyWystepujeNazwaFirmy(nazwa))
+                {
+                    throw new DuplikatNumeruException("Podana nazwa firmy wystepuje w systemie, wprowadz inna");
+                }
+                lista_firm.Add(new Firma(nrKRS, nazwa));
+                Console.WriteLine("Pomyslnie dodano firme do systemu");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Nie mozna dodac Firmy:\n" + e.Message);
+            }
+        }
+        public static void UsunFirmePoNumerze(string nr)
+        {
+            try
+            {
+                if (CzyWystepujeNrKlienta(nr, lista_firm))
+                {
+                    foreach (Firma item in ZnajdzPasujacePoTekscie(nr, lista_firm))
+                    {
+                        lista_firm.Remove(item);
+                    }
+                    Console.WriteLine("Pomyslnie usunieto firme z systemu");
+                }
+                else
+                {
+                    Console.WriteLine("Brak firmy o podanym numerze KRS");
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Nie udalo sie usunac firmy");
+            }
+        }
+        public static bool CzyWystepujeNazwaFirmy(string nazwa)
+        {
+            foreach (Firma item in GetFirmy)
+            {
+                if (item.CzyTaSamaNazwaFirmy(nazwa))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static void DodajKlientowFirmy(string nrKRS_Firmy, string nr_paszportu_klienta)
+        {
+                if (CzyWystepujeNrKlienta(nrKRS_Firmy, GetFirmy)
+                    && CzyWystepujeNrKlienta(nr_paszportu_klienta, GetOsoby))
+                {
+                    (ZnajdzKonkretnegoKlienta(nrKRS_Firmy, GetFirmy)
+                     as Firma).DodajKlienta(ZnajdzKonkretnegoKlienta(nr_paszportu_klienta,
+                         GetOsoby) as Osoba);
+                }
+                else
+                {
+                    Console.WriteLine("Niepoprawny numer firmy lub osoby");
+                }
+        }
+        
+        //Osoby -------------
+
         public static void DodajPasazera(string imie, string naziwsko, string nr_paszportu)
         {
             try  //Sprawdzenie unikalności numeru paszportu
@@ -189,7 +308,7 @@ namespace Bilety
             {
                 if (CzyWystepujeNrKlienta(nr, lista_pasazerow))
                 {
-                    foreach (Osoba item in ZnajdzPoTekscie(nr, lista_pasazerow))
+                    foreach (Osoba item in ZnajdzPasujacePoTekscie(nr, lista_pasazerow))
                     {
                         lista_pasazerow.Remove(item);
                     }
@@ -205,61 +324,6 @@ namespace Bilety
                 Console.WriteLine("Nie udalo sie usunac pasazera");
             }
         }
-        public static void DodajFirme(string nrKRS, string nazwa)
-        {
-            try //Sprawdzenie unikalności numeru KRS i nazwy
-            {
-                if(CzyWystepujeNrKlienta(nrKRS, lista_firm))
-                {
-                    throw new DuplikatNumeruException("Podany numer KRS wystepuje w systemie, wprowadz inny");
-                }
-                if(CzyWystepujeNazwaFirmy(nazwa))
-                {
-                    throw new DuplikatNumeruException("Podana nazwa firmy wystepuje w systemie, wprowadz inna");
-                }
-                lista_firm.Add(new Firma(nrKRS, nazwa)); 
-                Console.WriteLine("Pomyslnie dodano firme do systemu");
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("Nie mozna dodac Firmy:\n" + e.Message);
-            }
-        }
-        public static void UsunFirmePoNumerze(string nr)
-        {
-            try
-            {
-                if (CzyWystepujeNrKlienta(nr, lista_firm))
-                {
-                    foreach (Firma item in ZnajdzPoTekscie(nr, lista_firm))
-                    {
-                        lista_firm.Remove(item);
-                    }
-                    Console.WriteLine("Pomyslnie usunieto firme z systemu");
-                }
-                else
-                {
-                    Console.WriteLine("Brak firmy o podanym numerze KRS");
-                }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Nie udalo sie usunac firmy");
-            }
-        }
-        public static List<Klient> ZnajdzPoTekscie<T>(string tekst, List<T> lista)
-        {
-            List<Klient> pasujace = new List<Klient>();
-            foreach(T item in lista)
-            {
-                if ((item as Klient).CzyZawieraZnaki(tekst))
-                {
-                    pasujace.Add(item as Klient);
-                }
-            }
-            return pasujace;
-        }
-        
 
         // Samoloty --------------
 
@@ -434,6 +498,7 @@ namespace Bilety
         }
 
         // Loty -----------------
+
         public static void DodajLotNaTrasie(int nrTrasy, int dzien, int miesiac, int rok, int godzina, int minuta)
         {
             try
@@ -526,7 +591,16 @@ namespace Bilety
                 PokazLoty(i);
             }
         }
-
+        private static Lot ZnajdzLotPoID(int _idLotu)
+        {
+            Lot dany_lot = null;
+            foreach (Trasa T in lista_tras)
+            {
+                dany_lot = T.GetLoty.Find(oLot => oLot.IdLotu == _idLotu);
+            }
+            if (dany_lot == null) throw new NiepoprawnyNumerException("Niepoprawne ID Lotu");
+            return dany_lot;
+        }
         public static double LiczOdleglosc(Lotnisko L1, Lotnisko L2)
         {
             double droga;
