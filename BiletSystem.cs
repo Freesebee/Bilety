@@ -50,8 +50,7 @@ namespace Bilety
         //Zapisywanie stanu systemu --------------
 
         public static void ZapiszStan(string file_path)
-        {//DO JACKA: używaj ZapiszStan(""); 
-         //wtedy pliki zapisze w folderze bin/Debug projektu
+        {
             ZapiszOsoby($@"{file_path}Osoby.txt");
             ZapiszSamoloty($@"{file_path}Samoloty.txt");
             ZapiszFirmy($@"{file_path}Firmy.txt");
@@ -131,8 +130,7 @@ namespace Bilety
         //Wczytywanie statu systemu --------------
         
         public static void WczytajStan(string file_path)
-        { //Do Jacka: używaj WczytajStan(""); 
-          //wtedy pliki zapisze w folderze bin/Debug projektu
+        {
             WczytajOsoby($@"{file_path}Osoby.txt");
             WczytajFirmy(@"Firmy.txt");
             WczytajLotniska(@"Lotniska.txt");
@@ -288,7 +286,7 @@ namespace Bilety
         }
 
         //Rezerwacja ------------
-        //DO JACKA - gdy bedziesz chcial wczytac z klawiatury liczby to uzywaj "int.Parse(twoj_string)"
+
         public static void RezerwujBiletyGrupie(Firma kupujacy_bilety, int _idLotu)
         {
             try
@@ -387,8 +385,6 @@ namespace Bilety
                 return false;
             }
         }
-
-        //DO JACKA - pamiętaj o rzutowaniu w dół np "instancjaKlient as Osoba"
         public static void PokazKlientow<T>(List<T> lista) //wprowadz liste ktora chcesz wyswietlic
         {                                                  //Klientów, Firm lub Osób
             if (lista != null && lista.Count > 0)
