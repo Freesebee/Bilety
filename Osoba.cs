@@ -78,6 +78,10 @@ namespace Bilety
         {
             return $"Numer paszportu:{nr_paszportu} - {nazwisko} {imie}";
         }
+        public void UsunBilet(Bilet wybrany_bilet)
+        {
+            bilety.Remove(wybrany_bilet);
+        }
         public override string DaneDoZapisu()
         {
             return $"{imie},{nazwisko},{nr_paszportu}";

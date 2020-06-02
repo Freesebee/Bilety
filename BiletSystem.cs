@@ -816,6 +816,10 @@ namespace Bilety
                 dany_lot = T.GetLoty.Find(oLot => oLot.IdLotu == _idLotu);
                 if (dany_lot != null && dany_lot.GetBilety.Count > 0)
                 {                    
+                    foreach(Bilet b in dany_lot.GetBilety)
+                    {
+                        b.GetPasazer.UsunBilet(b);
+                    }
                     dany_lot.GetBilety.Clear();
                 }
                 if(T.GetLoty.Remove(dany_lot))
