@@ -213,13 +213,16 @@ namespace Bilety
                 foreach (string linia in linie)
                 {
                     string[] slowa = linia.Split(',');
-                    for (int j = 0; j < int.Parse(slowa[1]); j++)
+                    for (int i = 0; i < 3; i++)
                     {
-                        DodajSamolot(slowa[0]);
+                        for (int j = 0; j < int.Parse(slowa[i*2+1]); j++)
+                        {
+                            DodajSamolot(slowa[i*2]);
+                        }
                     }
                 }
                 //Console.Clear();
-                Console.WriteLine($"Pomyslnie wczytano {linie.Count()} samolotow do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {GetSamoloty.Count()} samolotow do systemu");
             }
             else
             {
