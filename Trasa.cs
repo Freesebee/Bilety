@@ -50,8 +50,12 @@ namespace Bilety
         public string DaneDoZapisu()
         {
             string wynik = $"{BiletSystem.GetLotniska.IndexOf(Lotnisko_wylotu)+1}," +
-                $"{BiletSystem.GetLotniska.IndexOf(Lotnisko_przylotu)+1};";
+                $"{BiletSystem.GetLotniska.IndexOf(Lotnisko_przylotu)+1}";
             short i = 1;
+            if(GetLoty.Count > 0)
+            {
+                wynik += ";";
+            }
             foreach (Lot item in GetLoty)
             {
                 wynik += item.DaneDoZapisu();

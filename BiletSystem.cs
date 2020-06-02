@@ -153,7 +153,7 @@ namespace Bilety
                     DodajOsobe(slowa[0], slowa[1], slowa[2]);
                 }
                 //Console.Clear();
-                Console.WriteLine("Pomyslnie wczytano osoby do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {linie.Count()} osoby do systemu");
             }
             else
             {
@@ -180,7 +180,7 @@ namespace Bilety
                     }
                 }
                // Console.Clear();
-                Console.WriteLine("Pomyslnie wczytano firmy do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {linie.Count()} firmy do systemu");
             }
             else
             {
@@ -198,7 +198,7 @@ namespace Bilety
                     DodajLotnisko(int.Parse(slowa[0]), int.Parse(slowa[1]), slowa[2], slowa[3]);
                 }
                 //Console.Clear();
-                Console.WriteLine("Pomyslnie wczytano lotniska do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {linie.Count()} lotniska do systemu");
             }
             else
             {
@@ -210,18 +210,16 @@ namespace Bilety
             if (File.Exists(nazwa_pliku))
             {
                 List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
-                int liczba_samolotow = 0;
                 foreach (string linia in linie)
                 {
                     string[] slowa = linia.Split(',');
                     for (int j = 0; j < int.Parse(slowa[1]); j++)
                     {
                         DodajSamolot(slowa[0]);
-                        liczba_samolotow++;
                     }
                 }
                 //Console.Clear();
-                Console.WriteLine($"Pomyslnie wczytano {liczba_samolotow} samolotow do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {linie.Count()} samolotow do systemu");
             }
             else
             {
@@ -234,26 +232,31 @@ namespace Bilety
             {
                 List<string> linie = File.ReadAllLines(nazwa_pliku).ToList();
                 short nr_lini = 0;
+                int liczba_lotow = 0;
                 foreach (string linia in linie)
                 {
                     nr_lini++;
                     string[] slowa = linia.Split(';');
                     string[] trasa = slowa[0].Split(',');
-                    string[] loty = slowa[1].Split('.'); 
-
                     DodajTrase(int.Parse(trasa[0]), int.Parse(trasa[1]));
 
-                    for (int i = 0; i < loty.Length; i++)
+                    if (slowa.Length >= 2)
                     {
-                        string[] lot = loty[i].Split(',');
+                        string[] loty = slowa[1].Split('.');
+                        for (int i = 0; i < loty.Length; i++)
+                        {
+                            string[] lot = loty[i].Split(',');
 
-                        DodajLotNaTrasie(nr_lini, int.Parse(lot[0]),
-                            int.Parse(lot[1]), int.Parse(lot[2]),
-                            int.Parse(lot[3]), int.Parse(lot[4]));
-                    }
+                            DodajLotNaTrasie(nr_lini, int.Parse(lot[0]),
+                                int.Parse(lot[1]), int.Parse(lot[2]),
+                                int.Parse(lot[3]), int.Parse(lot[4]));
+                            liczba_lotow++;
+                        }
+                    } 
                 }
                 //Console.Clear();
-                Console.WriteLine("Pomyslnie wczytano trasy i loty do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {linie.Count()}" +
+                    $" trasy i {liczba_lotow} loty do systemu");
             }
             else
             {
@@ -273,7 +276,7 @@ namespace Bilety
                         ZnajdzKonkretnegoKlienta(slowa[2],GetOsoby) as Osoba);
                 }
                 //Console.Clear();
-                Console.WriteLine("Pomyslnie wczytano bilety do systemu");
+                Console.WriteLine($"Pomyslnie wczytano {linie.Count()} bilety do systemu");
             }
             else
             {
@@ -288,7 +291,7 @@ namespace Bilety
             try
             {
                 Lot dany_lot = ZnajdzLotPoID(_idLotu);
-                if(dany_lot.LiczbaMiejsc < kupujacy_bilety.GetKlienci.Count())
+                if(dany_lot.LiczbaMiejsc > kupujacy_bilety.GetKlienci.Count())
                 {
                     foreach (Osoba item in kupujacy_bilety.GetKlienci)
                     {
@@ -839,19 +842,17 @@ namespace Bilety
         }
         public static Lot ZnajdzLotPoID(int _idLotu)
         {
-            Lot dany_lot = null;
             foreach (Trasa T in lista_tras)
             {
                 foreach(Lot L in T.GetLoty)
                 {
                     if(L.IdLotu == _idLotu)
                     {
-                        dany_lot = L;
+                        return L;
                     }
                 }
             }
-            if (dany_lot == null) throw new NiepoprawnyNumerException("Niepoprawne ID Lotu");
-            return dany_lot;
+            throw new NiepoprawnyNumerException("Niepoprawne ID Lotu");
         }
         public static double LiczOdleglosc(Lotnisko L1, Lotnisko L2)
         {

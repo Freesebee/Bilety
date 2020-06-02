@@ -13,7 +13,7 @@ namespace Bilety
             int Switch = 9, Switch1 = 9;
             int nrTrasy, coIleDni, ileLotow, dzien, miesiac,rok, godzina, minuta, _idLotu;
             string _nrKRS, _nr;
-
+            BiletSystem.WczytajStan("");
             while (Switch != 0 )
             {
                 Console.WriteLine("\n0. wyjscie");
@@ -24,6 +24,7 @@ namespace Bilety
                 Console.WriteLine("5. Generowanie lotow");
                 Console.WriteLine("6. Rezerwacja biletow");
                 Console.WriteLine("7. Zapis i odczyt");
+                Console.WriteLine("8. Czysc ekran");
 
                 string input = Console.ReadLine();
                 if (BiletSystem.CzyNumer(input))
@@ -257,10 +258,12 @@ namespace Bilety
                         break;
 
                         case 5:
-                        BiletSystem.PokazLoty();
-                        Console.WriteLine(" \n");
+                            BiletSystem.PokazLoty();
+                            Console.WriteLine(" \n");
+                            break;
+                        }
+                        
                         break;
-                        } break;
 
                     case 6:
                         Console.WriteLine("1. Rezerwuj Bilety Grupie");
@@ -269,29 +272,31 @@ namespace Bilety
                         Switch1 = Convert.ToInt32(Console.ReadLine());
                         switch (Switch1)
                         {
-                        case 1:
-                        Console.WriteLine("Podaj numer numer KRS firmy\n");
-                        _nrKRS = Console.ReadLine();
-                        Firma _kupujacy_bilety = BiletSystem.ZnajdzKonkretnegoKlienta( _nrKRS, BiletSystem.GetFirmy ) as Firma;
-                        Console.WriteLine("Podaj idLotu \n");
-                        _idLotu = Convert.ToInt32(Console.ReadLine());
-                        BiletSystem.RezerwujBiletyGrupie( _kupujacy_bilety, _idLotu);
-                        Console.WriteLine(" \n");
-                        break;
+                            case 1:
+                                Console.WriteLine("Podaj numer numer KRS firmy\n");
+                                _nrKRS = Console.ReadLine();
+                                Firma _kupujacy_bilety = BiletSystem.ZnajdzKonkretnegoKlienta( _nrKRS, BiletSystem.GetFirmy ) as Firma;
+                                Console.WriteLine("Podaj idLotu \n");
+                                _idLotu = Convert.ToInt32(Console.ReadLine());
+                                BiletSystem.RezerwujBiletyGrupie( _kupujacy_bilety, _idLotu);
+                                Console.WriteLine(" \n");
+                                break;
                             
-                        case 2:
-                        Console.WriteLine("Podaj numer klienta\n");
-                        _nr = Console.ReadLine();
-                        Klient kupujacy_bilet = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetKlienci );
-                        Console.WriteLine("Podaj id Lotu\n");
-                        _idLotu = Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Podaj numer klienta\n");
-                        _nr = Console.ReadLine();
-                        Osoba pasazer = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetOsoby )as Osoba;
-                        BiletSystem.RezerwujBilet(kupujacy_bilet,_idLotu,pasazer);
-                        Console.WriteLine(" \n");
+                            case 2:
+                                Console.WriteLine("Podaj numer klienta\n");
+                                _nr = Console.ReadLine();
+                                Klient kupujacy_bilet = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetKlienci );
+                                Console.WriteLine("Podaj id Lotu\n");
+                                _idLotu = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine("Podaj numer klienta\n");
+                                _nr = Console.ReadLine();
+                                Osoba pasazer = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetOsoby )as Osoba;
+                                BiletSystem.RezerwujBilet(kupujacy_bilet,_idLotu,pasazer);
+                                Console.WriteLine(" \n");
+                                break;
+                        }
+                        BiletSystem.ZapiszStan("");
                         break;
-                        } break;
 
                     case 7:
                         Console.WriteLine("1. Zapisz ");
@@ -309,9 +314,14 @@ namespace Bilety
                         Console.WriteLine(" \n");
                         break;
                         } break;
+
+                    case 8:
+                        Console.Clear();
+                        break;
                 default:
                     break;
                 }
+                BiletSystem.ZapiszStan("");
             }
         }
     }
