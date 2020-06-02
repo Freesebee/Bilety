@@ -14,7 +14,7 @@ namespace Bilety
             int nrTrasy, coIleDni, ileLotow, dzien, miesiac,rok, godzina, minuta, _idLotu;
             string _nrKRS, _nr;
             BiletSystem.WczytajStan("");
-            while (Switch != 0 )
+            while (Switch != 0)
             {
                 Console.WriteLine("\n0. wyjscie");
                 Console.WriteLine("1. Zarzadzanie samolotami");

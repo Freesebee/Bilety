@@ -139,8 +139,8 @@ namespace Bilety
             WczytajSamoloty(@"Samoloty.txt");
             WczytajTrasyZLotami(@"Trasy_loty.txt");
             WczytajBilety(@"Bilety.txt");
-            Console.WriteLine();
-            //Console.Clear(); <======== ODKOMENTUJ ABY CZYŚCIŁO KONSOLĘ
+            //Console.Clear();
+            Console.WriteLine("Pomyslnie wczytano wszystkie dane");
         }
         private static void WczytajOsoby(string nazwa_pliku)
         {
