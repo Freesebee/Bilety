@@ -24,24 +24,34 @@ namespace Bilety
                 Console.WriteLine("5. Generowanie lotow");
                 Console.WriteLine("6. Rezerwacja biletow");
                 Console.WriteLine("7. Zapis i odczyt");
-                Console.WriteLine("8. Czysc ekran");
+                Console.WriteLine("8. Czysc ekran\n");
 
                 string input = Console.ReadLine();
                 if (BiletSystem.CzyNumer(input))
                 {
                     Switch = Convert.ToInt32(input);
                 }
-
+                else Switch = 8;
                 switch (Switch)
                 {
                     case 1:
+                        Console.WriteLine("0. Powrót");
                         Console.WriteLine("1. Dodaj Samolot");
                         Console.WriteLine("2. Usun Samolot");
-                        Console.WriteLine("3. Pokaz Samoloty");
+                        Console.WriteLine("3. Pokaz Samoloty\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
+
+
                         switch (Switch1)
                         {
+
+                        case 0:
+                        break;
                         case 1:
                         Console.WriteLine("Jaki samolot chcesz dodac: Boeing, Airbus czy Bombardier\n");
                         string _rodzaj = Console.ReadLine();
@@ -65,16 +75,25 @@ namespace Bilety
 
 
                     case 2:
+                        Console.WriteLine("0. Powrót");
                         Console.WriteLine("1. Dodaj Klienta");
                         Console.WriteLine("2. Usun Pasazera Po Numerze");
                         Console.WriteLine("3. Pokaz Klientow");
-                        Console.WriteLine("4. Dodaj Firme");
-                        Console.WriteLine("5. Usun Firme");
-                        Console.WriteLine("6. Dodaj Klientow Firmy");
+                        Console.WriteLine("4. Znajdź Klienta");
+                        Console.WriteLine("5. Dodaj Firme");
+                        Console.WriteLine("6. Usun Firme");
+                        Console.WriteLine("7. Dodaj Klientow Firmy\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
                         switch (Switch1)
                         {
+                        case 0:
+                        break;
                         case 1:
                         Console.WriteLine("Podaj imie klienta \n");
                         string _imie = Console.ReadLine();
@@ -100,6 +119,14 @@ namespace Bilety
                         break;
 
                         case 4:
+                        Console.WriteLine("Podaj numer klienta \n");
+                        _nr = Console.ReadLine();
+                        BiletSystem.ZnajdzKonkretnegoKlienta(_nr, BiletSystem.GetKlienci);
+                        Console.WriteLine(" \n");
+                        break;
+
+
+                        case 5:
                         Console.WriteLine("Podaj numer KRS firmy \n");
                         _nrKRS = Console.ReadLine();
                         Console.WriteLine("Podaj nazwe firmy \n");
@@ -108,14 +135,14 @@ namespace Bilety
                         Console.WriteLine(" \n");
                         break;
 
-                        case 5:
+                        case 6:
                         Console.WriteLine("Podaj numer firmy do usuniecia\n");
                         _nr = Console.ReadLine();
                         BiletSystem.UsunFirmePoNumerze(_nr);
                         Console.WriteLine(" \n");
                         break;
 
-                        case 6:
+                        case 7:
                         Console.WriteLine("Podaj numer nrKRS Firmy\n");
                         string _nrKRS_Firmy = Console.ReadLine();
                         Console.WriteLine("Podaj nr paszportu klienta \n");
@@ -128,13 +155,20 @@ namespace Bilety
 
 
                     case 3:
+                        Console.WriteLine("0. Powrót");
                         Console.WriteLine("1. Dodaj Lotniko");
                         Console.WriteLine("2. Usun Lotnisko");
-                        Console.WriteLine("3. Pokaz Lotniska");
+                        Console.WriteLine("3. Pokaz Lotniska\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
                         switch (Switch1)
                         {
+                        case 0:
+                        break;
                         case 1:
                         Console.WriteLine("Podaj wsółrzędną x lotniska\n");
                         int x = Convert.ToInt32(Console.ReadLine());
@@ -164,13 +198,20 @@ namespace Bilety
 
 
                     case 4:
+                        Console.WriteLine("0. Powrót");
                         Console.WriteLine("1. Dodaj Trase");
                         Console.WriteLine("2. Usun Trase");
-                        Console.WriteLine("3. Pokaz Trasy");
+                        Console.WriteLine("3. Pokaz Trasy\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
                         switch (Switch1)
                         {
+                        case 0:
+                        break;
                         case 1:
                         Console.WriteLine("Podaj numer lotniska z którego samolot wylatuje\n");
                         int nrW = Convert.ToInt32(Console.ReadLine());
@@ -195,15 +236,22 @@ namespace Bilety
                         } break;
 
                     case 5:
+                        Console.WriteLine("0. Powrót");
                         Console.WriteLine("1. Dodaj Lot ");
                         Console.WriteLine("2. Dodaj Lot Cyklicznie");
                         Console.WriteLine("3. Usun Lot");
                         Console.WriteLine("4. Pokaz Loty po numerze");
-                        Console.WriteLine("5. Pokaz wszystkie Loty ");
+                        Console.WriteLine("5. Pokaz wszystkie Loty\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
                         switch (Switch1)
                         {
+                        case 0:
+                        break;
 
                         case 1:
                         Console.WriteLine("Podaj nr trasy\n");
@@ -266,12 +314,19 @@ namespace Bilety
                         break;
 
                     case 6:
+                        Console.WriteLine("0. Powrót");
                         Console.WriteLine("1. Rezerwuj Bilety Grupie");
-                        Console.WriteLine("2. Rezerwuj Bilet");
+                        Console.WriteLine("2. Rezerwuj Bilet\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
                         switch (Switch1)
                         {
+                            case 0:
+                            break;
                             case 1:
                                 Console.WriteLine("Podaj numer numer KRS firmy\n");
                                 _nrKRS = Console.ReadLine();
@@ -299,12 +354,19 @@ namespace Bilety
                         break;
 
                     case 7:
-                        Console.WriteLine("1. Zapisz ");
-                        Console.WriteLine("2. Wczytaj ");
+                        Console.WriteLine("0. Powrót");
+                        Console.WriteLine("1. Zapisz");
+                        Console.WriteLine("2. Wczytaj\n");
 
-                        Switch1 = Convert.ToInt32(Console.ReadLine());
+                        input = Console.ReadLine();
+                        if (BiletSystem.CzyNumer(input))
+                        {
+                            Switch1 = Convert.ToInt32(input);
+                        }
                         switch (Switch1)
                         {
+                        case 0:
+                        break;
                         case 1:
                         BiletSystem.ZapiszStan("");
                         Console.WriteLine(" \n");
