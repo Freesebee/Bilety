@@ -804,9 +804,25 @@ namespace Bilety
             DateTime DataPierwszegoLotu = (new DateTime(rok, miesiac, dzien, godzina, minuta, 0)) - cykl;
             for (int i = 0; i < ileLotow; i++)
             {
-                lista_tras[nrTrasy-1].DodajLot(DataPierwszegoLotu += cykl, ++IdentyfikatorLotow);
-                Console.WriteLine("\nPomyślnie utworzono lot " 
-                    + lista_tras[nrTrasy-1].GetLoty[lista_tras[nrTrasy-1].GetLoty.Count-1].ToString());
+
+                try 
+                {
+                    if (DobierzSamolot(lista_tras[nrTrasy-1].Lotnisko_wylotu,lista_tras[nrTrasy-1].Lotnisko_przylotu) == null)
+                    {
+                        throw new NiepoprawnyNumerException("Nie znaleziono odpowiedniego samolotu");
+                    } else
+                    lista_tras[nrTrasy-1].DodajLot(DataPierwszegoLotu += cykl, ++IdentyfikatorLotow);
+                    if (lista_tras[nrTrasy-1]==null)
+                    {
+                        throw new NiepoprawnaInformacjaException("Nie utworzono lotu.");
+                    }
+                    else Console.WriteLine("\nPomyślnie utworzono lot " + 
+                    lista_tras[nrTrasy-1].GetLoty[lista_tras[nrTrasy-1].GetLoty.Count-1].ToString());
+                }
+                catch(Exception)
+                {
+                    Console.WriteLine("Nie utworzono lotu na trasie.");
+                }
             }
         }
         public static void UsunLot(int _idLotu)
