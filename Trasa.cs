@@ -22,8 +22,11 @@ namespace Bilety
             Odleglosc = BiletSystem.LiczOdleglosc(wylot, przylot);
             lista_lotow = new List<Lot>();
             Console.WriteLine($"Utworzono trasę {wylot.Miasto} -> {przylot.Miasto}");
-        }    
-        
+        }
+        ~Trasa()
+        {
+            lista_lotow.Clear();
+        }
         public override string ToString()
         {
             return Lotnisko_wylotu.Miasto + " -> " + Lotnisko_przylotu.Miasto + " (" + Odleglosc + "km)";

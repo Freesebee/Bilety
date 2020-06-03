@@ -293,16 +293,23 @@ namespace Bilety
             try
             {
                 Lot dany_lot = ZnajdzLotPoID(_idLotu);
-                if(dany_lot.LiczbaMiejsc > kupujacy_bilety.GetKlienci.Count())
+                if(kupujacy_bilety.GetKlienci != null && kupujacy_bilety.GetKlienci.Count() > 0)
                 {
-                    foreach (Osoba item in kupujacy_bilety.GetKlienci)
+                    if (dany_lot.LiczbaMiejsc > kupujacy_bilety.GetKlienci.Count())
                     {
-                        RezerwujBilet(kupujacy_bilety, _idLotu, item);
+                        foreach (Osoba item in kupujacy_bilety.GetKlienci)
+                        {
+                            RezerwujBilet(kupujacy_bilety, _idLotu, item);
+                        }
+                    }
+                    else
+                    {
+                        throw new NiepoprawnaInformacjaException("Brak miejsc na podany lot");
                     }
                 }
                 else
                 {
-                    throw new NiepoprawnaInformacjaException("Brak wystarczającej liczby miejsc na podany lot");
+                    throw new NiepoprawnaInformacjaException("Brak klientow firmy");
                 }
             }
             catch(Exception e)
