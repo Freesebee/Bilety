@@ -75,15 +75,15 @@ namespace Bilety
         {
             return $"Numer KRS: {nr_KRS} {nazwa}";
         }
-        public static bool operator == (Firma a, Firma b)
-        {
-            if (a.nr_KRS == b.nr_KRS || a.nazwa == b.nazwa) return true;
-            else return false;
-        }
-        public static bool operator !=(Firma a, Firma b)
-        {
-            if (a.nr_KRS != b.nr_KRS && a.nazwa != b.nazwa) return true;
-            else return false;
-        }
+        //public static bool operator == (Firma a, Firma b)
+        //{
+        //    if (a.nr_KRS == b.nr_KRS || a.nazwa == b.nazwa) return true;
+        //    else return false;
+        //}
+        //public static bool operator !=(Firma a, Firma b)
+        //{
+        //    if (a.nr_KRS != b.nr_KRS && a.nazwa != b.nazwa) return true;
+        //    else return false;
+        //}
     }
 }
