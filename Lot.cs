@@ -21,7 +21,8 @@ namespace Bilety
 
         public Lot(Lotnisko wylot, Lotnisko przylot, DateTime czaswylotu, int ID)
         {
-            samolot = DobierzSamolot(wylot, przylot);
+            samolot = BiletSystem.DobierzSamolot(wylot, przylot);
+            samolot.Zajety();
             Lotnisko_wylotu = wylot;
             Lotnisko_przylotu = przylot;
             czas_wylotu = czaswylotu;
@@ -39,24 +40,6 @@ namespace Bilety
         public override string ToString()
         {
             return $"\nID: {IdLotu}\nWylot: {czas_wylotu}\nCzas lotu: {CzasLotu}\nWolnych miejsc: {LiczbaMiejsc}";
-        }
-        private Samolot DobierzSamolot(Lotnisko wylot, Lotnisko przylot)
-        {
-            double odleglosc = BiletSystem.LiczOdleglosc(wylot, przylot);
-            if (odleglosc > 0 && odleglosc <= 500) 
-            {
-                return BiletSystem.DodajSamolot("bombardier");
-            } else if (odleglosc > 500 && odleglosc <= 1200) 
-            {
-                return BiletSystem.DodajSamolot("airbus");
-            } else if (odleglosc > 1200 && odleglosc <= 5000) 
-            {
-                return BiletSystem.DodajSamolot("boeing");
-            } else 
-            {
-                Console.WriteLine("Kurde, przypał. Za daleka trasa, nie mamy takich samolotów :( ");
-                return null;
-            }
         }
 
         public void ZarezerwujMiejsce()
