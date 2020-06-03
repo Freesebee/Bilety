@@ -86,6 +86,10 @@ namespace Bilety
         {
             return $"{imie},{nazwisko},{nr_paszportu}";
         }
+        //public override bool Equals(object obj)
+        //{
+        //    if(this.nr_paszportu == );
+        //}
         //public static bool operator == (Osoba a, Osoba b)
         //{
         //    if ((a != null && b != null) && a.nr_paszportu == b.nr_paszportu) return true;
