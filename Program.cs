@@ -331,6 +331,7 @@ namespace Bilety
                                 Console.WriteLine("Podaj numer numer KRS firmy\n");
                                 _nrKRS = Console.ReadLine();
                                 Firma _kupujacy_bilety = BiletSystem.ZnajdzKonkretnegoKlienta( _nrKRS, BiletSystem.GetFirmy ) as Firma;
+                                if (_kupujacy_bilety == null) { Console.WriteLine("Nie ma takiego klienta."); break; }
                                 Console.WriteLine("Podaj idLotu \n");
                                 _idLotu = Convert.ToInt32(Console.ReadLine());
                                 BiletSystem.RezerwujBiletyGrupie( _kupujacy_bilety, _idLotu);
@@ -341,21 +342,13 @@ namespace Bilety
                                 Console.WriteLine("Podaj numer klienta\n");
                                 _nr = Console.ReadLine();
                                 Klient kupujacy_bilet = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetKlienci );
-                                /*if (kupujacy_bilet == null)
-                                {
-                                    Console.WriteLine("Nie ma takiego klienta.");
-                                    break;
-                                }*/
+                                if (kupujacy_bilet == null) { Console.WriteLine("Nie ma takiego klienta."); break; }
                                 Console.WriteLine("Podaj id Lotu\n");
                                 _idLotu = Convert.ToInt32(Console.ReadLine());
                                 Console.WriteLine("Podaj numer klienta\n");
                                 _nr = Console.ReadLine();
                                 Osoba pasazer = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetOsoby )as Osoba;
-                                /*if (pasazer == null)
-                                {
-                                    Console.WriteLine("Nie ma takiej osoby.");
-                                    break;
-                                }*/
+                                if (pasazer == null) { Console.WriteLine("Nie ma takiej osoby."); break; }
                                 BiletSystem.RezerwujBilet(kupujacy_bilet,_idLotu,pasazer);
                                 Console.WriteLine(" \n");
                                 break;

@@ -826,6 +826,7 @@ namespace Bilety
                 if(T.GetLoty.Remove(dany_lot))
                 {
                     Console.WriteLine("Pomyślnie usunięto lot");
+                    return;
                 }
             }
             if (dany_lot == null)
