@@ -26,7 +26,7 @@ namespace Bilety
         
         public override string ToString()
         {
-            return Lotnisko_wylotu.Miasto + " -> " + Lotnisko_przylotu.Miasto;
+            return Lotnisko_wylotu.Miasto + " -> " + Lotnisko_przylotu.Miasto + " (" + Odleglosc + "km)";
         }
         public void DodajLot(DateTime data, int id)
         {

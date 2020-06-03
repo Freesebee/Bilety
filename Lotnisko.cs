@@ -12,7 +12,7 @@ namespace Bilety
         public string Miasto { get; private set; }
         public string Kraj { get; private set; }
 
-        //Tworzy obiekt Lotnisko i automatycznie dodaje je na lista_lotnisk w BiletSystem
+        
         public Lotnisko(int _x, int _y, string _kraj, string _miasto)
         {
             X = _x;
@@ -23,9 +23,9 @@ namespace Bilety
         }
         public override string ToString()
         {
-            return "\nKraj: " + Kraj +
-                "\nMiasto: " + Miasto +
-                $"\nWspółrzędne: ({X},{Y})";
+            return Kraj +
+                "\t" + Miasto +
+                $"\t({X},{Y})";
         }
         public string DaneDoZapisu()
         {

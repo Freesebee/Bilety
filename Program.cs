@@ -19,7 +19,7 @@ namespace Bilety
                 Console.WriteLine("\n0. wyjscie");
                 Console.WriteLine("1. Zarzadzanie samolotami");
                 Console.WriteLine("2. Zarzadzanie klientami i firmami");
-                Console.WriteLine("3. Zarzadzanie lotnikami");
+                Console.WriteLine("3. Zarzadzanie lotniskami");
                 Console.WriteLine("4. Zarzadzanie trasami");
                 Console.WriteLine("5. Generowanie lotow");
                 Console.WriteLine("6. Rezerwacja biletow");
@@ -156,7 +156,7 @@ namespace Bilety
 
                     case 3:
                         Console.WriteLine("0. Powrót");
-                        Console.WriteLine("1. Dodaj Lotniko");
+                        Console.WriteLine("1. Dodaj Lotnisko");
                         Console.WriteLine("2. Usun Lotnisko");
                         Console.WriteLine("3. Pokaz Lotniska\n");
 
@@ -170,9 +170,9 @@ namespace Bilety
                         case 0:
                         break;
                         case 1:
-                        Console.WriteLine("Podaj wsółrzędną x lotniska\n");
+                        Console.WriteLine("Podaj wsółrzędną X lotniska\n");
                         int x = Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Podaj wsółrzędną x lotniska \n");
+                        Console.WriteLine("Podaj wsółrzędną Y lotniska \n");
                         int y = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine("Podaj kraj w którym jest lotnisko \n");
                         string kraj = Console.ReadLine();
@@ -199,8 +199,8 @@ namespace Bilety
 
                     case 4:
                         Console.WriteLine("0. Powrót");
-                        Console.WriteLine("1. Dodaj Trase");
-                        Console.WriteLine("2. Usun Trase");
+                        Console.WriteLine("1. Dodaj Trasę");
+                        Console.WriteLine("2. Usun Trasę");
                         Console.WriteLine("3. Pokaz Trasy\n");
 
                         input = Console.ReadLine();
@@ -240,7 +240,7 @@ namespace Bilety
                         Console.WriteLine("1. Dodaj Lot ");
                         Console.WriteLine("2. Dodaj Lot Cyklicznie");
                         Console.WriteLine("3. Usun Lot");
-                        Console.WriteLine("4. Pokaz Loty po numerze");
+                        Console.WriteLine("4. Pokaz Loty na trasie");
                         Console.WriteLine("5. Pokaz wszystkie Loty\n");
 
                         input = Console.ReadLine();
@@ -299,7 +299,7 @@ namespace Bilety
                         break;
 
                         case 4:
-                        Console.WriteLine("Podaj nr Trasy\n");
+                        Console.WriteLine("Podaj nr Trasy, której loty chcesz zobaczyć\n");
                         nrTrasy = Convert.ToInt32(Console.ReadLine());
                         BiletSystem.PokazLoty(nrTrasy);
                         Console.WriteLine(" \n");
@@ -315,7 +315,7 @@ namespace Bilety
 
                     case 6:
                         Console.WriteLine("0. Powrót");
-                        Console.WriteLine("1. Rezerwuj Bilety Grupie");
+                        Console.WriteLine("1. Rezerwuj Bilety Klientom danej firmy");
                         Console.WriteLine("2. Rezerwuj Bilet\n");
 
                         input = Console.ReadLine();
@@ -341,11 +341,21 @@ namespace Bilety
                                 Console.WriteLine("Podaj numer klienta\n");
                                 _nr = Console.ReadLine();
                                 Klient kupujacy_bilet = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetKlienci );
+                                /*if (kupujacy_bilet == null)
+                                {
+                                    Console.WriteLine("Nie ma takiego klienta.");
+                                    break;
+                                }*/
                                 Console.WriteLine("Podaj id Lotu\n");
                                 _idLotu = Convert.ToInt32(Console.ReadLine());
                                 Console.WriteLine("Podaj numer klienta\n");
                                 _nr = Console.ReadLine();
                                 Osoba pasazer = BiletSystem.ZnajdzKonkretnegoKlienta( _nr, BiletSystem.GetOsoby )as Osoba;
+                                /*if (pasazer == null)
+                                {
+                                    Console.WriteLine("Nie ma takiej osoby.");
+                                    break;
+                                }*/
                                 BiletSystem.RezerwujBilet(kupujacy_bilet,_idLotu,pasazer);
                                 Console.WriteLine(" \n");
                                 break;

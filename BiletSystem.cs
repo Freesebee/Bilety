@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -301,7 +302,7 @@ namespace Bilety
                 }
                 else
                 {
-                    throw new NiepoprawnaInformacjaException("Brak miejsc na podany lot");
+                    throw new NiepoprawnaInformacjaException("Brak wystarczającej liczby miejsc na podany lot");
                 }
             }
             catch(Exception e)
@@ -567,21 +568,21 @@ namespace Bilety
             if (rodzaj == "boeing" || rodzaj == "Boeing")
             {
                 dostepne_samoloty.Add(new Boeing());
-                //Console.WriteLine("\nUtworzono: " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
+                Console.WriteLine("Utworzono " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
                 return dostepne_samoloty[dostepne_samoloty.Count-1];
             } else if (rodzaj == "airbus" || rodzaj == "Airbus")
             {
                 dostepne_samoloty.Add(new Airbus());
-                //Console.WriteLine("\nUtworzono: " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
+                Console.WriteLine("Utworzono " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
                 return dostepne_samoloty[dostepne_samoloty.Count-1];
             } else if (rodzaj == "bombardier" || rodzaj == "Bombardier")
             {
                 dostepne_samoloty.Add(new Bombardier());
-                //Console.WriteLine("\nUtworzono: " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
+                Console.WriteLine("Utworzono " + dostepne_samoloty[dostepne_samoloty.Count-1].ToString());
                 return dostepne_samoloty[dostepne_samoloty.Count-1];
             } else 
             {
-                Console.WriteLine("\nPodano złą nazwę samolotu.");
+                Console.WriteLine("Podano złą nazwę samolotu.");
                 return null;
             }
         }
@@ -602,7 +603,7 @@ namespace Bilety
                 Console.WriteLine("\nDostępne samoloty:");
                 foreach (Samolot oSamolot in dostepne_samoloty)
                 {
-                    Console.WriteLine($"\n{i++}. " + oSamolot.ToString());
+                    Console.WriteLine($"{i++}. " + oSamolot.ToString());
                 }
             }
             else Console.WriteLine("Brak samolotów do wyświetlenia.");
@@ -633,7 +634,7 @@ namespace Bilety
         }
         public static void UsunLotnisko(int nrLotniska)
         {
-            if (lista_lotnisk.Count > 0 || lista_lotnisk.Count >= nrLotniska || nrLotniska > 0)
+            if (lista_lotnisk.Count > 0 && lista_lotnisk.Count >= nrLotniska && nrLotniska > 0)
             {
                 Trasa uzywana_trasa = lista_tras.Find(lTrasy => lTrasy.Lotnisko_wylotu == lista_lotnisk[nrLotniska-1]
                                       || lTrasy.Lotnisko_przylotu == lista_lotnisk[nrLotniska-1]);
@@ -661,7 +662,7 @@ namespace Bilety
                 Console.WriteLine("\nDostępne lotniska:");
                 foreach (Lotnisko oLotnisko in lista_lotnisk)
                 {
-                    Console.WriteLine($"\n{i++}. " + oLotnisko.ToString());
+                    Console.WriteLine($"{i++}. " + oLotnisko.ToString());
                 }
             }
             else Console.WriteLine("Brak lotnisk do wyświetlenia.");
@@ -690,8 +691,14 @@ namespace Bilety
                 return;
             }
             Lotnisko wylot, przylot;
-            wylot = lista_lotnisk[--nrW];
-            przylot = lista_lotnisk[--nrP];
+            wylot = lista_lotnisk[nrW-1];
+            przylot = lista_lotnisk[nrP-1];
+            if (LiczOdleglosc(wylot,przylot) > 5000)
+            {
+                Console.WriteLine($"Zbyt duża odległość między lotniskami ({LiczOdleglosc(wylot,przylot)}km)");
+                Console.WriteLine($"Nasze samoloty latają maxymalnie na 5000km.");
+                return;
+            }
 
             foreach(Trasa oTrasa in lista_tras) //Sprawdza, czy trasa już istnieje
             {
@@ -734,23 +741,14 @@ namespace Bilety
 
         // Loty -----------------
 
-        public static void DodajLotNaTrasie(
-            int nrTrasy,
-            int dzien,
-            int miesiac,
-            int rok,
-            int godzina,
-            int minuta)
+        public static void DodajLotNaTrasie(int nrTrasy, int dzien, int miesiac,
+                                            int rok, int godzina, int minuta)
         {
             try
-            { //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo
-                if(dzien > 30 || miesiac > 12 || godzina > 23 || minuta > 59
-                    || dzien <= 0 || miesiac <= 0 || godzina < 0 || minuta < 0) 
+            {
+                if (!SprawdzDate(dzien, miesiac, godzina, minuta))
                 {
-                    throw new NiepoprawnyNumerException("Zła data.");
-                } else if (dzien > 28 && miesiac == 2)
-                {
-                    throw new NiepoprawnyNumerException("Zła data.");
+                    throw new NiepoprawnyNumerException("Niepoprawna data.");
                 }
                 if(nrTrasy <= 0 || nrTrasy > lista_tras.Count)
                 {
@@ -762,29 +760,33 @@ namespace Bilety
                 Console.WriteLine("Podano niepoprawne dane.");
                 return;
             }
-
-            lista_tras[nrTrasy-1].DodajLot(new DateTime(rok, miesiac, dzien, godzina, minuta, 0), ++IdentyfikatorLotow);
-            Console.WriteLine("\nPomyślnie utworzono lot " + 
+            try 
+            {
+                if (DobierzSamolot(lista_tras[nrTrasy-1].Lotnisko_wylotu,lista_tras[nrTrasy-1].Lotnisko_przylotu) == null)
+                {
+                    throw new NiepoprawnyNumerException("Nie znaleziono odpowiedniego samolotu");
+                } else
+                lista_tras[nrTrasy-1].DodajLot(new DateTime(rok, miesiac, dzien, godzina, minuta, 0), ++IdentyfikatorLotow);
+                if (lista_tras[nrTrasy-1]==null)
+                {
+                    throw new NiepoprawnaInformacjaException("Nie utworzono lotu.");
+                }
+                else Console.WriteLine("\nPomyślnie utworzono lot " + 
                 lista_tras[nrTrasy-1].GetLoty[lista_tras[nrTrasy-1].GetLoty.Count-1].ToString());
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Nie utworzono lotu na trasie.");
+            }
         }
-        public static void DodajLotCyklicznie(int coIleDni,
-                                              int ileLotow,
-                                              int nrTrasy,
-                                              int dzien,
-                                              int miesiac,
-                                              int rok,
-                                              int godzina,
-                                              int minuta)
+        public static void DodajLotCyklicznie(int coIleDni, int ileLotow, int nrTrasy, int dzien,
+                                              int miesiac, int rok, int godzina, int minuta)
         {
             try
             { //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo
-                if(dzien > 30 || miesiac > 12 || godzina > 23 || minuta > 59
-                    || dzien <= 0 || miesiac <= 0 || godzina < 0 || minuta < 0) 
+                if (!SprawdzDate(dzien, miesiac, godzina, minuta))
                 {
-                    throw new NiepoprawnyNumerException("Zła data.");
-                } else if (dzien > 28 && miesiac == 2)
-                {
-                    throw new NiepoprawnyNumerException("Zła data.");
+                    throw new NiepoprawnyNumerException("Niepoprawna data.");
                 }
                 if(nrTrasy <= 0 || nrTrasy > lista_tras.Count)
                 {
@@ -831,17 +833,31 @@ namespace Bilety
                 Console.WriteLine("Coś poszło nie tak przy usuwaniu.");
             }
         }
-        public static void PokazLoty(int nrTrasy)//na trasie (brakuje sprawdzania wyjatkow)
+        public static void PokazLoty(int nrTrasy)//na konkretnej trasie
         {
+            try
+            {
+                if (nrTrasy > lista_tras.Count || nrTrasy < 0)
+                    throw new NiepoprawnyNumerException("Podano niepoprawny numer trasy");             
+            }
+            catch(Exception) 
+            {
+                return;
+            }
             Console.WriteLine("\nLoty na trasie |" + lista_tras[nrTrasy-1].ToString() + $"| ({lista_tras[nrTrasy-1].GetLoty.Count}):");
             lista_tras[nrTrasy-1].PokazLoty();
         }
         public static void PokazLoty()//pokazuje wszystkie loty w ogóle
         {
-            for (int i = 1; i <= lista_tras.Count; i++)
+            if (lista_tras.Count > 0)
             {
-                PokazLoty(i);
+                for (int i = 1; i <= lista_tras.Count; i++)
+                {
+                    PokazLoty(i);
+                }
             }
+            else
+                Console.WriteLine("Brak Tras i lotów do wyświetlenia");
         }
         public static Lot ZnajdzLotPoID(int _idLotu)
         {
@@ -857,6 +873,9 @@ namespace Bilety
             }
             throw new NiepoprawnyNumerException("Niepoprawne ID Lotu");
         }
+
+        // Dodatkowe -----------
+
         public static double LiczOdleglosc(Lotnisko L1, Lotnisko L2)
         {
             double droga;
@@ -864,6 +883,61 @@ namespace Bilety
             droga = Math.Round(Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2)), 2);
             return droga * 100; //jedna kratka w układzie współrzędnych odpowiada 100km
         }
-        
+        public static bool SprawdzDate(int dzien, int miesiac, int godzina, int minuta)
+        {
+             //31 dzien każdego miesiąca to święto lotników i samoloty nie latają, elo
+            if (dzien == 31)
+            {
+                Console.WriteLine("31 dzień każdego miesiąca to święto lotników i samoloty nie latają");
+                return false;
+            } else if(dzien > 30 || miesiac > 12 || godzina > 23 || minuta > 59 
+                || dzien <= 0 || miesiac <= 0 || godzina < 0 || minuta < 0)
+            {
+                return false;
+            } else if (dzien > 28 && miesiac == 2)
+            {
+                return false;
+            } else
+                return true;
+        }
+        public static Samolot DobierzSamolot(Lotnisko wylot, Lotnisko przylot)
+        {
+            double odleglosc = LiczOdleglosc(wylot, przylot);
+            if (odleglosc > 0 && odleglosc <= 500) 
+            {
+                Samolot samolot = GetSamoloty.Find(oSamolot => oSamolot is Bombardier && oSamolot.CzyWolny == true);
+                if (samolot != null)
+                {
+                    return samolot;
+                }
+            }
+            if (odleglosc > 0 && odleglosc <= 1200) 
+            {
+                Samolot samolot = GetSamoloty.Find(oSamolot => oSamolot is Airbus && oSamolot.CzyWolny == true);
+                if (samolot != null)
+                {
+                    return samolot;
+                }
+            }
+            if (odleglosc > 0 && odleglosc <= 5000) 
+            {
+                Samolot samolot = GetSamoloty.Find(oSamolot => oSamolot is Boeing && oSamolot.CzyWolny == true);
+                if (samolot != null)
+                {
+                    return samolot;
+                }
+            }
+            if (odleglosc > 5000)
+            {
+                Console.WriteLine("Za daleka trasa, samoloty latają maksymalnie 5000km ");
+                return null;
+            } else
+            {
+                Console.WriteLine($"Brak dostępnych samolotów, mogących pokonać tak daleką trasę {odleglosc}km");
+                Console.WriteLine($"Zasięg Boeing: 5000km\nZasięg Airbus: 1200km\n zasięg Bombardier: 500km");
+                return null;
+            }
+
+        }
     }
 }
