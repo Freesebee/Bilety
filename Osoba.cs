@@ -86,15 +86,15 @@ namespace Bilety
         {
             return $"{imie},{nazwisko},{nr_paszportu}";
         }
-        public static bool operator == (Osoba a, Osoba b)
-        {
-            if (a.nr_paszportu == b.nr_paszportu) return true;
-            else return false;
-        }
-        public static bool operator != (Osoba a, Osoba b)
-        {
-            if (a.nr_paszportu != b.nr_paszportu) return true;
-            else return false;
-        }
+        //public static bool operator == (Osoba a, Osoba b)
+        //{
+        //    if ((a != null && b != null) && a.nr_paszportu == b.nr_paszportu) return true;
+        //    else return false;
+        //}
+        //public static bool operator != (Osoba a, Osoba b)
+        //{
+        //    if ((a == null || b == null) || a.nr_paszportu != b.nr_paszportu) return true;
+        //    else return false;
+        //}
     }
 }
